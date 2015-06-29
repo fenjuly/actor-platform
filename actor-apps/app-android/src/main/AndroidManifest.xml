@@ -200,6 +200,13 @@
             android:theme="@style/CommonActivityTheme"
             android:windowSoftInputMode="adjustNothing|stateAlwaysHidden" />
 
+        <activity
+            android:name=".app.fragment.settings.InterestsActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:theme="@style/CommonActivityTheme"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden" />
+
+
         <!-- Media -->
 
         <activity

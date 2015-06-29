@@ -28,8 +28,8 @@ public class BannerContent extends AbsContent {
         adUrl = data.getString("advertUrl");
 
         reference = new FileReference(new FileLocation(
-                image.getInt("fileId"),
-                image.getLong("fileHash")),
+                image.getLong("fileId"),
+                image.getLong("fileAccessHash")),
                 "banner.jpg", image.getInt("fileSize"));
     }
 
