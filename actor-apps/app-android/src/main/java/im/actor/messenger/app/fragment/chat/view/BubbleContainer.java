@@ -92,7 +92,7 @@ public class BubbleContainer extends ViewGroup {
             dateDiv.setVisibility(VISIBLE);
         }
 
-        addView(dateDiv, new MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        addView(dateDiv, new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
         // UNREAD
 
@@ -114,7 +114,7 @@ public class BubbleContainer extends ViewGroup {
             unreadDiv.setVisibility(VISIBLE);
         }
 
-        addView(unreadDiv, new MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        addView(unreadDiv, new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
         // AVATAR
         avatarView = new AvatarView(getContext());
@@ -138,7 +138,7 @@ public class BubbleContainer extends ViewGroup {
         mode = MODE_FULL;
         showAvatar = false;
         avatarView.setVisibility(GONE);
-        findMessageView().setLayoutParams(new MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        findMessageView().setLayoutParams(new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         requestLayout();
     }
 
@@ -147,7 +147,7 @@ public class BubbleContainer extends ViewGroup {
         showAvatar = false;
         avatarView.setVisibility(GONE);
         avatarView.unbind();
-        findMessageView().setLayoutParams(new MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        findMessageView().setLayoutParams(new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         requestLayout();
     }
 
@@ -181,7 +181,7 @@ public class BubbleContainer extends ViewGroup {
             avatarView.setVisibility(GONE);
             avatarView.unbind();
         }
-        findMessageView().setLayoutParams(new MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        findMessageView().setLayoutParams(new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     }
 
     public void showDate(long time) {
@@ -314,7 +314,7 @@ public class BubbleContainer extends ViewGroup {
             bubble.layout(getMeasuredWidth() - w, topOffset, getMeasuredWidth(), topOffset + h);
         } else if (mode == MODE_FULL) {
             int bubbleLeft = (right - left - w) / 2;
-            bubble.layout(bubbleLeft, topOffset, bubbleLeft + w, topOffset + h);
+            bubble.layout(left, topOffset, right, topOffset + h);
         }
     }
 

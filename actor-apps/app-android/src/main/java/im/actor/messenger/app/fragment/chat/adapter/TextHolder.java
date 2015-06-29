@@ -1,5 +1,6 @@
 package im.actor.messenger.app.fragment.chat.adapter;
 
+import android.graphics.PorterDuff;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Spannable;
@@ -181,6 +182,7 @@ public class TextHolder extends MessageHolder {
         } else {
             messageBubble.setBackgroundResource(R.drawable.bubble_text_in);
         }
+        messageBubble.getBackground().setColorFilter(0x99555555, PorterDuff.Mode.MULTIPLY);
 
         if (isItalic) {
             text.setTypeface(Fonts.italic());

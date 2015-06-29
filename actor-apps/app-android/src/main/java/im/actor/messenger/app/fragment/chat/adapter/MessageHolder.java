@@ -120,6 +120,10 @@ public abstract class MessageHolder extends BindedViewHolder
         return false;
     }
 
+    public BubbleContainer getContainer() {
+        return container;
+    }
+
     public void unbind() {
         currentMessage = null;
     }

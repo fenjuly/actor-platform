@@ -28,6 +28,8 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
+import java.util.ArrayList;
+
 import im.actor.messenger.R;
 import im.actor.messenger.app.Intents;
 import im.actor.messenger.app.fragment.preview.ViewAvatarActivity;
@@ -37,6 +39,12 @@ import im.actor.messenger.app.fragment.help.HelpActivity;
 import im.actor.messenger.app.util.Screen;
 import im.actor.messenger.app.view.CoverAvatarView;
 import im.actor.messenger.app.view.TintImageView;
+import im.actor.model.api.Interest;
+import im.actor.model.api.rpc.RequestGetAvailableInterests;
+import im.actor.model.api.rpc.RequestGetBalance;
+import im.actor.model.api.rpc.ResponseGetAvailableInterests;
+import im.actor.model.api.rpc.ResponseGetBalance;
+import im.actor.model.concurrency.Command;
 import im.actor.model.concurrency.CommandCallback;
 import im.actor.model.mvvm.ValueChangedListener;
 import im.actor.model.mvvm.ValueModel;
@@ -56,6 +64,7 @@ public class MyProfileFragment extends BaseFragment {
     private int baseColor;
 
     private CoverAvatarView avatarView;
+    private TextView balance;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -165,8 +174,8 @@ public class MyProfileFragment extends BaseFragment {
                         recordView.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View v) {
-                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                                android.content.ClipData clip = android.content.ClipData.newPlainText("Phone number", "+" + record.getPhone());
+                                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText("Phone number", "+" + record.getPhone());
                                 clipboard.setPrimaryClip(clip);
                                 Toast.makeText(getActivity(), R.string.toast_phone_copied, Toast.LENGTH_SHORT).show();
                                 return true;
@@ -211,9 +220,18 @@ public class MyProfileFragment extends BaseFragment {
         });
 
         avatarView = (CoverAvatarView) view.findViewById(R.id.avatar);
-        avatarView.setBkgrnd((ImageView) view.findViewById(R.id.avatar_bgrnd));
 
         bind(avatarView, users().get(myUid()).getAvatar());
+
+        view.findViewById(R.id.interests).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), InterestsActivity.class));
+            }
+        });
+
+        balance = (TextView) view.findViewById(R.id.balance_tv);
+        balance.setText(getString(R.string.settings_balance).concat(" ..."));
 
         view.findViewById(R.id.avatar).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,9 +277,44 @@ public class MyProfileFragment extends BaseFragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Command<ResponseGetAvailableInterests> cmd = messenger().executeExternalCommand(new RequestGetAvailableInterests());
+        cmd.start(new CommandCallback<ResponseGetAvailableInterests>() {
+            @Override
+            public void onResult(ResponseGetAvailableInterests res) {
+                messenger().saveAvailableInterests(res);
+            }
+
+            @Override
+            public void onError(Exception e) {
+            }
+        });
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         messenger().trackOwnProfileOpen();
+
+        Command<ResponseGetBalance> cmdBalance = messenger().executeExternalCommand(new RequestGetBalance());
+        cmdBalance.start(new CommandCallback<ResponseGetBalance>() {
+            @Override
+            public void onResult(final ResponseGetBalance res) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        balance.setText(getString(R.string.settings_balance).concat(" ").concat(res.getBalance()));
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
     }
 
     @Override

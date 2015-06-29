@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (C) 2015 Actor LLC. <https://actor.im>
+  -->
+
+<im.actor.messenger.app.fragment.chat.view.BubbleContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true">
+
+    <FrameLayout
+        android:id="@+id/bubbleContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:duplicateParentState="true">
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+
+
+        <View
+            android:id="@+id/photoOverlay"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/bubble_overlay"
+            android:duplicateParentState="true" />
+    </FrameLayout>
+</im.actor.messenger.app.fragment.chat.view.BubbleContainer>

@@ -4,10 +4,17 @@
 
 package im.actor.model.modules;
 
+import java.io.IOException;
+import java.util.List;
+
+import im.actor.model.api.Interest;
+import im.actor.model.api.rpc.ResponseGetAvailableInterests;
 import im.actor.model.droidkit.actors.ActorCreator;
 import im.actor.model.droidkit.actors.ActorRef;
 import im.actor.model.droidkit.actors.ActorSystem;
 import im.actor.model.droidkit.actors.Props;
+import im.actor.model.droidkit.bser.Bser;
+import im.actor.model.droidkit.bser.BserObject;
 import im.actor.model.entity.Peer;
 import im.actor.model.entity.PeerType;
 import im.actor.model.modules.settings.SettingsSyncActor;
@@ -29,6 +36,8 @@ public class Settings extends BaseModule {
     private final String KEY_NOTIFICATION_TEXT;
     private final String KEY_NOTIFICATION_CHAT_PREFIX;
     private final String KEY_MARKDOWN_ENABLED;
+    private final String KEY_AVAILABLE_INTERESTS;
+    private final String KEY_INTEREST_ENABLED;
 
     private final String KEY_RENAME_HINT_SHOWN;
 
@@ -86,6 +95,10 @@ public class Settings extends BaseModule {
 
         // Hints
         KEY_RENAME_HINT_SHOWN = "hint.contact.rename";
+
+        // Llectro
+        KEY_AVAILABLE_INTERESTS = "account.interests.available_interests";
+        KEY_INTEREST_ENABLED = "account.interests.interest.";
     }
 
     public void run() {
@@ -237,6 +250,34 @@ public class Settings extends BaseModule {
         }
     }
 
+    public boolean isInterestEnabled(int i) {
+        return loadValue(KEY_INTEREST_ENABLED + i + ".enabled", false);
+    }
+
+    public void changeInterestEnabled(int i, boolean val) {
+        changeValue(KEY_INTEREST_ENABLED + i + ".enabled", val);
+    }
+
+    public void saveAvailableInterests(ResponseGetAvailableInterests interests) {
+        writeObject(interests, KEY_AVAILABLE_INTERESTS);
+        for (Interest i : interests.getRootInterests()) {
+            if (isInterestEnabled(i.getId()) != i.isSelected())
+                changeInterestEnabled(i.getId(), i.isSelected());
+        }
+    }
+
+    public List<Interest> loadAvailableInterests() {
+        List<Interest> res = null;
+        try {
+            ResponseGetAvailableInterests interests = (ResponseGetAvailableInterests) readObject(new ResponseGetAvailableInterests(), KEY_AVAILABLE_INTERESTS);
+            if (interests == null) return null;
+            res = interests.getRootInterests();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
     private boolean loadValue(String key, boolean defaultVal) {
         String sValue = readValue(key);
         boolean res = defaultVal;
@@ -262,6 +303,16 @@ public class Settings extends BaseModule {
 
     private void writeValue(String key, String val) {
         preferences().putString(STORAGE_PREFIX + key, val);
+    }
+
+    private BserObject readObject(BserObject res, String key) throws IOException {
+        byte[] b = preferences().getBytes(key);
+        if (b == null) return null;
+        return Bser.parse(res, b);
+    }
+
+    private void writeObject(BserObject obj, String key) {
+        preferences().putBytes(key, obj.toByteArray());
     }
 
     private String readValue(String key) {

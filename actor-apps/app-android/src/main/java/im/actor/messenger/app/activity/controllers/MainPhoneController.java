@@ -3,7 +3,9 @@ package im.actor.messenger.app.activity.controllers;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
@@ -32,6 +34,7 @@ import im.actor.messenger.app.fragment.contacts.ContactsFragment;
 import im.actor.messenger.app.fragment.dialogs.DialogsFragment;
 import im.actor.messenger.app.fragment.help.HelpActivity;
 import im.actor.messenger.app.fragment.main.SearchAdapter;
+import im.actor.messenger.app.fragment.settings.InterestsActivity;
 import im.actor.messenger.app.fragment.settings.MyProfileActivity;
 import im.actor.messenger.app.util.Screen;
 import im.actor.messenger.app.view.Fonts;
@@ -39,6 +42,12 @@ import im.actor.messenger.app.view.FragmentNoMenuStatePagerAdapter;
 import im.actor.messenger.app.view.HeaderViewRecyclerAdapter;
 import im.actor.messenger.app.view.OnItemClickedListener;
 import im.actor.messenger.app.view.PagerSlidingTabStrip;
+import im.actor.model.api.rpc.RequestGetAvailableInterests;
+import im.actor.model.api.rpc.RequestInitLlectro;
+import im.actor.model.api.rpc.ResponseGetAvailableInterests;
+import im.actor.model.api.rpc.ResponseVoid;
+import im.actor.model.concurrency.Command;
+import im.actor.model.concurrency.CommandCallback;
 import im.actor.model.entity.Dialog;
 import im.actor.model.entity.SearchEntity;
 import im.actor.model.mvvm.BindedDisplayList;
@@ -97,6 +106,9 @@ public class MainPhoneController extends MainBaseController {
     private String forwardDocDescriptor = "";
     private boolean forwardDocIsDoc = true;
 
+    SharedPreferences shp;
+    SharedPreferences.Editor ed;
+
     public MainPhoneController(MainActivity mainActivity) {
         super(mainActivity);
     }
@@ -154,6 +166,24 @@ public class MainPhoneController extends MainBaseController {
                     forwardDocIsDoc = extras.getBoolean("forward_doc_is_doc");
                 }
             }
+        }
+
+        shp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        ed = shp.edit();
+        if (!shp.getBoolean("llectroInited", false)) {
+            Command<ResponseVoid> cmd = messenger().executeExternalCommand(new RequestInitLlectro(Screen.getWidth(), Screen.getHeight()));
+            if (cmd != null) cmd.start(new CommandCallback<ResponseVoid>() {
+                @Override
+                public void onResult(ResponseVoid res) {
+                    ed.putBoolean("llectroInited", true);
+                    ed.commit();
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
         }
 
         setContentView(R.layout.activity_main);
@@ -334,6 +364,21 @@ public class MainPhoneController extends MainBaseController {
                             emptyContactsView.setVisibility(View.GONE);
                             syncInProgressView.setVisibility(View.GONE);
                             getActivity().invalidateOptionsMenu();
+                            if (messenger().loadAvailableInterests() == null) {
+                                messenger().executeExternalCommand(new RequestGetAvailableInterests()).start(new CommandCallback<ResponseGetAvailableInterests>() {
+                                    @Override
+                                    public void onResult(ResponseGetAvailableInterests res) {
+                                        messenger().saveAvailableInterests(res);
+                                        startActivity(new Intent(getActivity(), InterestsActivity.class));
+                                    }
+
+                                    @Override
+                                    public void onError(Exception e) {
+
+                                    }
+                                });
+                            }
+
                         }
                     }
                 });

@@ -142,6 +142,8 @@
     <string name="settings_header">Настройки</string>
     <string name="settings_help">Помощь</string>
     <string name="settings_ask">Задать вопрос</string>
+    <string name="settings_interests">Интересы</string>
+    <string name="settings_balance">Баланс: </string>
     <string name="settings_notifications">Оповещения</string>
     <string name="settings_chat">Настройки чата</string>
     <string name="settings_security">Безопасность</string>

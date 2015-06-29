@@ -2,6 +2,7 @@ package im.actor.messenger.app.fragment.chat.adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -65,6 +66,8 @@ public class DocHolder extends MessageHolder {
         // Basic bubble
         View bubbleView = itemView.findViewById(R.id.bubbleContainer);
         bubbleView.setBackgroundResource(R.drawable.conv_bubble_media_in);
+        bubbleView.getBackground().setColorFilter(0x99555555, PorterDuff.Mode.MULTIPLY);
+
         menu = itemView.findViewById(R.id.menu);
         menu.setOnClickListener(new View.OnClickListener() {
             @Override

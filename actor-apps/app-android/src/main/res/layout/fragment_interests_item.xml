@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/interestItem"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:paddingBottom="@dimen/settings_content_padding"
+    android:paddingLeft="@dimen/settings_content_padding"
+    android:paddingRight="@dimen/settings_content_padding"
+    android:paddingTop="@dimen/settings_content_padding">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/interestTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_primary" />
+
+        <TextView
+            android:id="@+id/interestEnabledText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_secondary" />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/interestEnabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/settings_content_padding"
+        android:layout_marginRight="@dimen/settings_content_padding"
+        android:gravity="center_vertical"
+        android:focusable="false" />
+</LinearLayout>
+
