@@ -36,7 +36,7 @@ public class SearchHolder extends BindedViewHolder {
         itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        highlightColor = context.getResources().getColor(R.color.primary);
+        highlightColor = context.getResources().getColor(R.color.primary_alt);
 
         avatar = new AvatarView(context);
         avatar.init(Screen.dp(52), 24);
