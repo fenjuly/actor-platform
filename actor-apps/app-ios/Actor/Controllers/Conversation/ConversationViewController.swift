@@ -23,7 +23,7 @@ class ConversationViewController: ConversationBaseViewController {
     
     private let avatarView = BarAvatarView(frameSize: 36, type: .Rounded)
     
-    private let backgroundView: UIView = UIView()
+    private let backgroundView: UIImageView = UIImageView()
     
     private var layoutCache: LayoutCache!
 //    private let heightCache = HeightCache()
@@ -51,8 +51,8 @@ class ConversationViewController: ConversationBaseViewController {
         self.collectionView.alwaysBounceVertical = true
         
         backgroundView.clipsToBounds = true
-        backgroundView.backgroundColor = UIColor(
-            patternImage:UIImage(named: "bg_foggy_birds")!.tintBgImage(MainAppTheme.bubbles.chatBgTint))
+        backgroundView.image = UIImage(named: "bg_clouds")
+        backgroundView.contentMode = UIViewContentMode.ScaleAspectFill
         view.insertSubview(backgroundView, atIndex: 0)
 
         // Text Input

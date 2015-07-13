@@ -80,7 +80,7 @@ import Foundation
             let phoneController = AuthPhoneViewController()
             var loginNavigation = AANavigationController(rootViewController: phoneController)
             loginNavigation.navigationBar.tintColor = Resources.BarTintColor
-            loginNavigation.makeBarTransparent()
+            loginNavigation.navigationBar.lt_setContentAlpha(0.0)
             
             window?.rootViewController = loginNavigation
             window?.makeKeyAndVisible();
@@ -238,6 +238,18 @@ import Foundation
             }, error: { (val) -> () in
                 dispatch_async(dispatch_get_main_queue(), {
                     hud.hide(true)
+                    failureBlock?(val: val)
+                })
+        }))
+    }
+    
+    func executeHidden(command: AMCommand, successBlock: ((val: Any?) -> Void)?, failureBlock: ((val: Any?) -> Void)?) {
+        command.startWithCallback(CocoaCallback(result: { (val:Any?) -> () in
+            dispatch_async(dispatch_get_main_queue(), {
+                successBlock?(val: val)
+            })
+            }, error: { (val) -> () in
+                dispatch_async(dispatch_get_main_queue(), {
                     failureBlock?(val: val)
                 })
         }))

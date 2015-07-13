@@ -75,6 +75,9 @@
 #import "im/actor/model/api/rpc/ResponseGetAvailableInterests.h"
 #import "im/actor/model/api/rpc/RequestEnableInterests.h"
 #import "im/actor/model/api/rpc/RequestDisableInterests.h"
+#import "im/actor/model/api/rpc/RequestGetBalance.h"
+#import "im/actor/model/api/rpc/ResponseGetBalance.h"
+#import "im/actor/model/api/rpc/RequestInitLlectro.h"
 
 // DroidKit Engine
 

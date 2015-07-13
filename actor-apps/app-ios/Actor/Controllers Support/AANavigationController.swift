@@ -10,6 +10,7 @@ class AANavigationController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         navigationBar.hideBottomHairline()
         view.backgroundColor = MainAppTheme.list.backyardColor
         
@@ -34,7 +35,7 @@ class AANavigationController: UINavigationController {
 }
 
 extension UINavigationBar {
-    
+
     func hideBottomHairline() {
         let navigationBarImageView = hairlineImageViewInNavigationBar(self)
         navigationBarImageView!.hidden = true
@@ -59,5 +60,4 @@ extension UINavigationBar {
         
         return nil
     }
-    
 }

@@ -21,6 +21,8 @@ class SettingsViewController: AATableViewController {
     
     private var phones: JavaUtilArrayList?
     
+    private var money: String?
+    
     // MARK: -
     // MARK: Constructors
     
@@ -60,7 +62,7 @@ class SettingsViewController: AATableViewController {
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         tableView.backgroundColor = MainAppTheme.list.backyardColor
         tableView.clipsToBounds = false
-        tableView.tableFooterView = UIView()
+        // tableView.tableFooterView = UIView()
         
         tableData = UATableData(tableView: tableView)
         tableData.registerClass(UserPhotoCell.self, forCellReuseIdentifier: UserInfoCellIdentifier)
@@ -133,6 +135,31 @@ class SettingsViewController: AATableViewController {
                         })
                 }
             }
+        
+        // Balance
+        var balanceSection = tableData.addSection()
+            .setHeaderHeight(15)
+            .setFooterHeight(15)
+        
+        balanceSection.addCommonCell { (cell) -> () in
+            var template = NSLocalizedString("SettingsBalance", comment: "title")
+            if self.money != nil {
+                cell.setContent(template.replace("{money}", dest: "\(self.money!)"))
+            } else {
+                cell.setContent(template.replace("{money}", dest: "..."))
+            }
+            cell.style = .Normal
+            cell.showBottomSeparator()
+            cell.showTopSeparator()
+        }
+        
+        balanceSection.addNavigationCell("SettingsInterests", actionClosure: { () -> () in
+            self.navigateNext(InterestsController(), removeCurrent: false)
+        })
+        
+        balanceSection.addActionCell("SettingsWithdraw", actionClosure: { () -> () in
+            self.alertUser("Withdrawing is not implemented!")
+        })
         
         // Profile
         var topSection = tableData.addSection()
@@ -293,6 +320,18 @@ class SettingsViewController: AATableViewController {
         navigationController?.navigationBar.shadowImage = UIImage()
 
         applyScrollUi(tableView)
+        
+        self.executeHidden(MSG.executeExternalCommand(APRequestGetBalance()), successBlock: { (val) -> Void in
+            let res = val as! APResponseGetBalance
+            self.money = res.getBalance()
+            
+            if let cell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 2)) as? CommonCell {
+                var template = NSLocalizedString("SettingsBalance", comment: "title")
+                cell.setContent(template.replace("{money}", dest: "\(self.money!)"))
+            }
+        }) { (val) -> Void in
+            // Just ignore
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {

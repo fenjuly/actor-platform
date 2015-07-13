@@ -42,7 +42,7 @@ class AddParticipantViewController: ContactsBaseViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (section == 0) {
-            return 1
+            return 0
         } else {
             return super.tableView(tableView, numberOfRowsInSection: section)
         }

@@ -54,6 +54,12 @@
 
 "SettingsVersion" = "Version {version}";
 
+"SettingsBalance" = "My Balance: {money}";
+
+"SettingsInterests" = "My Interests";
+
+"SettingsWithdraw" = "Withdraw my money";
+
 /*
  * Profile
  */

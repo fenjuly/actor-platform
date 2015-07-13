@@ -12,5 +12,8 @@ extension UIViewController {
     
     func execute(command: AMCommand, successBlock: ((val: Any?) -> Void)?, failureBlock: ((val: Any?) -> Void)?) {
         (UIApplication.sharedApplication().delegate as! AppDelegate).execute(command, successBlock: successBlock, failureBlock: failureBlock)
-    }    
+    }
+    func executeHidden(command: AMCommand, successBlock: ((val: Any?) -> Void)?, failureBlock: ((val: Any?) -> Void)?) {
+        (UIApplication.sharedApplication().delegate as! AppDelegate).executeHidden(command, successBlock: successBlock, failureBlock: failureBlock)
+    }
 }

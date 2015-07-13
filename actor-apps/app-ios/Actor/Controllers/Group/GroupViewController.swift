@@ -107,13 +107,13 @@ class GroupViewController: AATableViewController {
             .showBottomSeparator(15.0)
             .hideTopSeparator()
         
-        adminSection
-            .addNavigationCell("GroupIntegrations", actionClosure: { () -> () in
-                self.navigateNext(IntegrationViewController(gid: jint(self.gid)), removeCurrent: false)
-            })
-            .setLeftInset(15.0)
-            .showBottomSeparator(0.0)
-            .hideTopSeparator()
+//        adminSection
+//            .addNavigationCell("GroupIntegrations", actionClosure: { () -> () in
+//                self.navigateNext(IntegrationViewController(gid: jint(self.gid)), removeCurrent: false)
+//            })
+//            .setLeftInset(15.0)
+//            .showBottomSeparator(0.0)
+//            .hideTopSeparator()
         
         // Notifications
         tableData.addSection()

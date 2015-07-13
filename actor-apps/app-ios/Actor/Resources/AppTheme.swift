@@ -291,6 +291,9 @@ class AppNavigationBar {
         // NavigationBar Background
         navAppearance.barTintColor = barColor;
         
+        // NavigationBar Alpha
+        navAppearance.alpha = 0.2
+        
         // navAppearance.setBackgroundImage(Imaging.imageWithColor(barColor, size: CGSize(width: 1, height: 1)), forBarMetrics: UIBarMetrics.Default)
         // navAppearance.shadowImage = Imaging.imageWithColor(barColor, size: CGSize(width: 1, height: 2))
         // Small hack for correct background color

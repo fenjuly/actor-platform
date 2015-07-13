@@ -48,4 +48,8 @@ extension String {
             return "#";
         }
     }
+    
+    func replace(src: String, dest: String) -> String {
+        return self.stringByReplacingOccurrencesOfString(src, withString: dest, options: NSStringCompareOptions.allZeros, range: nil)
+    }
 }
