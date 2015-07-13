@@ -154,7 +154,7 @@ class SettingsViewController: AATableViewController {
         }
         
         balanceSection.addNavigationCell("SettingsInterests", actionClosure: { () -> () in
-            self.navigateNext(InterestsController(), removeCurrent: false)
+            self.navigateNext(SettingsInterestsViewController(), removeCurrent: false)
         })
         
         balanceSection.addActionCell("SettingsWithdraw", actionClosure: { () -> () in

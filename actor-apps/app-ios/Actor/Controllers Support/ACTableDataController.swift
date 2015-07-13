@@ -30,9 +30,15 @@ class ACTableDataController: AATableViewController {
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         tableView.backgroundColor = MainAppTheme.list.backyardColor
         tableView.tableFooterView = UIView()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
-        tableData = isGrouped ? UAGrouppedTableData(tableView: tableView) : UATableData(tableView: tableView)
-        tableDidLoad()
+        if tableData == nil {
+            tableData = isGrouped ? UAGrouppedTableData(tableView: tableView) : UATableData(tableView: tableView)
+            tableDidLoad()
+        }
     }
     
     func tableDidLoad() {

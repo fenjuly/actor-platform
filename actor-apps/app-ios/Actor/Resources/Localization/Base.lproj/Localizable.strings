@@ -229,6 +229,12 @@
 "PrivacyTerminateHint" = "Logs out all devices except for this one.";
 
 /*
+ * Interest
+ */
+
+"InterestsTitle" = "My Interests";
+
+/*
  * Chat
  */
 

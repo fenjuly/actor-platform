@@ -83,10 +83,15 @@ class MainTabViewController : UITabBarController, UITabBarDelegate {
                 } else {
                     viewControllers = [contactsNavigation, dialogsNavigation, settingsNavigation]
                 }
-                
 
                 selectedIndex = 0;
                 selectedIndex = 1;
+                
+                if isAfterLogin {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.presentViewController(AANavigationController(rootViewController: SettingsInterestsViewController()), animated: true, completion: nil)
+                    })
+                }
             }
         }
     }

@@ -71,7 +71,7 @@
 		06562FB61B30717A001E4B68 /* UATableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06562FB51B30717A001E4B68 /* UATableData.swift */; };
 		06562FBC1B3112F8001E4B68 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06562FBB1B3112F8001E4B68 /* Device.swift */; };
 		0657E1A31B26240A0017B724 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0657E1A21B26240A0017B724 /* InviteLinkViewController.swift */; };
-		065808E91B7043A100A6AA96 /* InterestsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065808E81B7043A100A6AA96 /* InterestsController.swift */; };
+		065808EB1B70444D00A6AA96 /* SettingsInterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065808EA1B70444D00A6AA96 /* SettingsInterestsViewController.swift */; };
 		0658FD2C1B6F341C00A6AA96 /* AnalyticsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 0658F73B1B6F341600A6AA96 /* AnalyticsProvider.m */; };
 		0658FD2D1B6F341C00A6AA96 /* MainThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 0658F73E1B6F341600A6AA96 /* MainThread.m */; };
 		0658FD2E1B6F341C00A6AA96 /* Verified.m in Sources */ = {isa = PBXBuildFile; fileRef = 0658F7401B6F341600A6AA96 /* Verified.m */; };
@@ -947,7 +947,7 @@
 		06562FB51B30717A001E4B68 /* UATableData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UATableData.swift; sourceTree = "<group>"; };
 		06562FBB1B3112F8001E4B68 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		0657E1A21B26240A0017B724 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
-		065808E81B7043A100A6AA96 /* InterestsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterestsController.swift; path = Actor/Controllers/InterestsController.swift; sourceTree = SOURCE_ROOT; };
+		065808EA1B70444D00A6AA96 /* SettingsInterestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsInterestsViewController.swift; sourceTree = "<group>"; };
 		0658F6E71B6F152400A6AA96 /* libcore.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libcore.so; sourceTree = "<group>"; };
 		0658F7291B6F295700A6AA96 /* libcore.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcore.so; path = External/libcore.so; sourceTree = "<group>"; };
 		0658F73A1B6F341600A6AA96 /* AnalyticsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyticsProvider.h; sourceTree = "<group>"; };
@@ -2588,10 +2588,10 @@
 		05E706441AD1F5FD009F09D8 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				065808E81B7043A100A6AA96 /* InterestsController.swift */,
 				05E706451AD1F665009F09D8 /* SettingsViewController.swift */,
 				05E706481AD3EDE0009F09D8 /* SettingsPrivacyViewController.swift */,
 				05E7064A1AD3EDEF009F09D8 /* SettingsNotificationsViewController.swift */,
+				065808EA1B70444D00A6AA96 /* SettingsInterestsViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -5903,7 +5903,6 @@
 				0658FFA41B6F341C00A6AA96 /* RSAEngine.m in Sources */,
 				0658FE821B6F341C00A6AA96 /* FileSource.m in Sources */,
 				0658FDA21B6F341C00A6AA96 /* RequestValidateCode.m in Sources */,
-				065808E91B7043A100A6AA96 /* InterestsController.swift in Sources */,
 				0658FF4A1B6F341C00A6AA96 /* MTPush.m in Sources */,
 				0658FD7C1B6F341C00A6AA96 /* RequestKickUser.m in Sources */,
 				0658FD301B6F341C00A6AA96 /* AuthHolder.m in Sources */,
@@ -5928,6 +5927,7 @@
 				0658FF211B6F341C00A6AA96 /* BindedDisplayList.m in Sources */,
 				06D8D8C01AB431D800A80E40 /* FMDBKeyValue.swift in Sources */,
 				06D8D8C41AB43BA100A80E40 /* CocoaStorage.swift in Sources */,
+				065808EB1B70444D00A6AA96 /* SettingsInterestsViewController.swift in Sources */,
 				050B226E1ACC010200A0E904 /* AuthSmsViewController.swift in Sources */,
 				0658FDF31B6F341C00A6AA96 /* UpdateUserLastSeen.m in Sources */,
 				2537F8671A9753DD004A02E9 /* ABPhoneField.m in Sources */,

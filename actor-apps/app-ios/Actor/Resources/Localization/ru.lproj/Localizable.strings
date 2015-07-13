@@ -61,6 +61,12 @@
 "SettingsWithdraw" = "Вывести Мои деньги";
 
 /*
+ * Interest
+ */
+
+"InterestsTitle" = "Мои Интересы";
+
+/*
  * Profile
  */
 

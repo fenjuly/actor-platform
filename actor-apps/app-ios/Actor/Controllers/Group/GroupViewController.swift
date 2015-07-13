@@ -104,7 +104,7 @@ class GroupViewController: AATableViewController {
                 self.editName()
             })
             .setLeftInset(15.0)
-            .showBottomSeparator(15.0)
+            .showBottomSeparator(0)
             .hideTopSeparator()
         
 //        adminSection
