@@ -22,6 +22,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import im.actor.messenger.R;
@@ -56,6 +60,7 @@ import im.actor.model.mvvm.ValueDoubleChangedListener;
 import im.actor.model.mvvm.ValueModel;
 
 import static im.actor.messenger.app.core.Core.messenger;
+import static im.actor.messenger.app.util.io.IOUtils.readAll;
 import static im.actor.messenger.app.view.ViewUtils.goneView;
 import static im.actor.messenger.app.view.ViewUtils.showView;
 
@@ -106,6 +111,8 @@ public class MainPhoneController extends MainBaseController {
     private String forwardDocDescriptor = "";
     private boolean forwardDocIsDoc = true;
 
+    private boolean communityEnabled = true;
+
     SharedPreferences shp;
     SharedPreferences.Editor ed;
 
@@ -134,6 +141,14 @@ public class MainPhoneController extends MainBaseController {
 
     @Override
     public void onCreate(Bundle savedInstance) {
+        JSONObject config = null;
+        try {
+            config = new JSONObject(new String(readAll(getActivity().getAssets().open("app.json"))));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -165,6 +180,14 @@ public class MainPhoneController extends MainBaseController {
                     forwardDocDescriptor = extras.getString("forward_doc_descriptor");
                     forwardDocIsDoc = extras.getBoolean("forward_doc_is_doc");
                 }
+            }
+        }
+
+        if (config != null) {
+            try {
+                communityEnabled = config.getBoolean("community");
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
 
@@ -576,6 +599,11 @@ public class MainPhoneController extends MainBaseController {
                     res2.setHasOptionsMenu(false);
                     return res2;
 
+                case 2:
+                    JoinPublicGroupFragment res3 = new JoinPublicGroupFragment();
+                    res3.setHasOptionsMenu(false);
+                    return res3;
+
             }
         }
 
@@ -588,11 +616,6 @@ public class MainPhoneController extends MainBaseController {
                 case 1:
                     return getActivity().getString(R.string.main_bar_contacts);
             }
-        }
-
-        @Override
-        public int getPageIconResId(int position, Context context) {
-            return -1;
         }
     }
 }
