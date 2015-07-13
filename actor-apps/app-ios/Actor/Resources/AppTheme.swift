@@ -4,7 +4,7 @@
 
 import Foundation
 
-var MainAppTheme = AppTheme()
+var MainAppTheme = LlectroTheme()
 
 class AppTheme {
     
@@ -144,6 +144,9 @@ class AppList {
     var hintColor : UIColor { get { return UIColor(red: 164/255.0, green: 164/255.0, blue: 164/255.0, alpha: 1) } }
     var sectionColor : UIColor { get { return UIColor(red: 164/255.0, green: 164/255.0, blue: 164/255.0, alpha: 1) } }
 //     var arrowColor : UIColor { get { return UIColor(red: 0, green: 0, blue: 0, alpha: 0xDE/255.0) } }
+    
+    var switchOnColor: UIColor { get { return UIColor.RGB(0x14d966) } }
+    var switchOffColor: UIColor? { get { return nil } }
     
     var dialogTitle: UIColor { get { return UIColor(red: 0, green: 0, blue: 0, alpha: 0xDE/255.0) } }
     var dialogText: UIColor { get { return UIColor(red: 0, green: 0, blue: 0, alpha: 0x8A/255.0) } }

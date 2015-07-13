@@ -117,6 +117,8 @@ class CommonCell: UITableViewCell {
         if switcher == nil {
             switcher = UISwitch()
             switcher!.addTarget(self, action: Selector("switcherSwitched"), forControlEvents: UIControlEvents.ValueChanged)
+            switcher!.onTintColor = MainAppTheme.list.switchOnColor
+            switcher!.tintColor = MainAppTheme.list.switchOffColor
             contentView.addSubview(switcher!)
         }
     }

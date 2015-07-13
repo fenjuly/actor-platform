@@ -84,6 +84,8 @@ class LlectroList : AppList {
     
     override var contactsTitle: UIColor { get { return UIColor.whiteColor() } }
     override var contactsShortTitle: UIColor { get { return UIColor.whiteColor() } }
+    
+    override var switchOnColor: UIColor { get { return UIColor.RGB(0x50A1D6) } }
 }
 
 class LlectroNavigationBar: AppNavigationBar {
