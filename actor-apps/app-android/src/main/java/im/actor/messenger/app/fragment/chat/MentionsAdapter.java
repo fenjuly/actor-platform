@@ -36,7 +36,7 @@ public class MentionsAdapter extends HolderAdapter<GroupMember> {
 
     public MentionsAdapter(Collection<GroupMember> members, Context context, MentionsUpdatedCallback updatedCallback, boolean initEmpty) {
         super(context);
-        highlightColor = context.getResources().getColor(R.color.primary);
+        highlightColor = context.getResources().getColor(R.color.primary_alt);
         GroupMember currentUser = null;
         for(GroupMember m:members){
             if(m.getUid()==myUid())currentUser = m;

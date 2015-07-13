@@ -391,7 +391,7 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                Context wrapper = new ContextThemeWrapper(ChatActivity.this, R.style.AttachPopupTheme);
+                Context wrapper = new ContextThemeWrapper(ChatActivity.this, R.style.AppToolbarTheme);
                 PopupMenu popup = new PopupMenu(wrapper, findViewById(R.id.attachAnchor));
 
                 try {

@@ -134,7 +134,7 @@ public class ContactHolder extends BindedViewHolder {
         avatar.bind(data);
 
         if (query.length() > 0) {
-            title.setText(SearchHighlight.highlightQuery(data.getName(), query, 0xff0277bd));
+            title.setText(SearchHighlight.highlightQuery(data.getName(), query, title.getResources().getColor(R.color.primary_alt)));
         } else {
             title.setText(data.getName());
         }

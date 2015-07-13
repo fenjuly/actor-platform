@@ -5,7 +5,7 @@
 
 <resources>
 
-    <style name="AppToolbarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppToolbarTheme" parent="Theme.AppCompat">
         <item name="android:windowContentOverlay">@null</item>
 
         <item name="colorPrimary">@color/primary</item>

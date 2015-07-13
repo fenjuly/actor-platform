@@ -62,7 +62,7 @@
     <!-- Base UI colors -->
 
     <color name="list_action">@color/accent</color>
-    <color name="section_title">@color/primary</color>
+    <color name="section_title">@color/primary_alt</color>
     <color name="section_icon_small">#b5b6b7</color>
     <color name="section_icon_large">@color/primary</color>
 
