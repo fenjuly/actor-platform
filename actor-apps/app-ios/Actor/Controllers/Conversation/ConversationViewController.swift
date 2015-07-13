@@ -47,6 +47,7 @@ class ConversationViewController: ConversationBaseViewController {
         self.collectionView.registerClass(AABubbleMediaCell.self, forCellWithReuseIdentifier: BubbleMediaIdentifier)
         self.collectionView.registerClass(AABubbleDocumentCell.self, forCellWithReuseIdentifier: BubbleDocumentIdentifier)
         self.collectionView.registerClass(AABubbleServiceCell.self, forCellWithReuseIdentifier: BubbleServiceIdentifier)
+        self.collectionView.registerClass(AABubbleAdCell.self, forCellWithReuseIdentifier: BubbleBannerIdentifier)
         self.collectionView.backgroundColor = UIColor.clearColor()
         self.collectionView.alwaysBounceVertical = true
         
@@ -468,7 +469,7 @@ class ConversationViewController: ConversationBaseViewController {
     
     override func buildCell(collectionView: UICollectionView, cellForRowAtIndexPath indexPath: NSIndexPath, item: AnyObject?) -> UICollectionViewCell {
         var message = (item as! AMMessage);
-        var cell: AABubbleCell
+        var cell: AABubbleCell?
         if (message.getContent() is AMTextContent) {
             cell = collectionView.dequeueReusableCellWithReuseIdentifier(BubbleTextIdentifier, forIndexPath: indexPath) as! AABubbleTextCell
         } else if (message.getContent() is AMPhotoContent) {
@@ -477,11 +478,28 @@ class ConversationViewController: ConversationBaseViewController {
             cell = collectionView.dequeueReusableCellWithReuseIdentifier(BubbleDocumentIdentifier, forIndexPath: indexPath) as! AABubbleDocumentCell
         } else if (message.getContent() is AMServiceContent){
             cell = collectionView.dequeueReusableCellWithReuseIdentifier(BubbleServiceIdentifier, forIndexPath: indexPath) as! AABubbleServiceCell
-        } else {
+        } else if (message.getContent() is AMJsonContent) {
+            var bannerContent = BannerContent.fromJson(message.getContent() as! AMJsonContent)
+            if (bannerContent != nil) {
+                cell = collectionView.dequeueReusableCellWithReuseIdentifier(BubbleBannerIdentifier, forIndexPath: indexPath) as! AABubbleAdCell
+            }
+        }
+        
+        // Unsupported
+        if (cell == nil) {
             cell = collectionView.dequeueReusableCellWithReuseIdentifier(BubbleTextIdentifier, forIndexPath: indexPath) as! AABubbleTextCell
         }
-        cell.setConfig(peer, controller: self)
-        return cell
+        var rid = message.getRid()
+        cell!.setConfig(peer, controller: self) { () -> () in
+            for ind in 0..<self.getCount() {
+                var obj = self.objectAtIndex(ind) as! AMMessage
+                if obj.getRid() == rid {
+                    self.updateRows([ind])
+                    return
+                }
+            }
+        }
+        return cell!
     }
     
     override func bindCell(collectionView: UICollectionView, cellForRowAtIndexPath indexPath: NSIndexPath, item: AnyObject?, cell: UICollectionViewCell) {
@@ -550,12 +568,21 @@ class ConversationViewController: ConversationBaseViewController {
         updateRows(toUpdate)
     }
     
+    override func itemsWillForceReload(indexes: [Int]) {
+        for ind in indexes {
+            self.layoutCache.remove((objectAtIndex(ind) as! AMMessage).getRid())
+        }
+    }
+    
     override func needFullReload(item: AnyObject?, cell: UICollectionViewCell) -> Bool {
         var message = (item as! AMMessage);
         if cell is AABubbleTextCell {
             if (message.getContent() is AMPhotoContent) {
                 return true
             }
+        }
+        if let ad = cell as? AABubbleAdCell {
+            return ad.needResize(message)
         }
         
         return false

@@ -21,4 +21,8 @@ class LayoutCache {
         // layouts.setObject(layout, forKey: id)
         layouts.setKey(id, withValue: layout)
     }
+    
+    func remove(id: jlong) {
+        layouts.removeValueForKey(id)
+    }
 }

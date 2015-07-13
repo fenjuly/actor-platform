@@ -70,6 +70,7 @@
 // API
 #import "im/actor/model/network/parser/Request.h"
 #import "im/actor/model/network/parser/Response.h"
+#import "im/actor/model/api/FileLocation.h"
 #import "im/actor/model/api/Interest.h"
 #import "im/actor/model/api/rpc/RequestGetAvailableInterests.h"
 #import "im/actor/model/api/rpc/ResponseGetAvailableInterests.h"
@@ -155,7 +156,7 @@
 #import "im/actor/model/entity/content/FileSource.h"
 #import "im/actor/model/entity/content/FileLocalSource.h"
 #import "im/actor/model/entity/content/FileRemoteSource.h"
-#import "im/actor/model/entity/content/BannerContent.h"
+#import "im/actor/model/entity/content/JsonContent.h"
 #import "im/actor/model/entity/PhoneBookContact.h"
 #import "im/actor/model/entity/PhoneBookPhone.h"
 #import "im/actor/model/entity/PhoneBookEmail.h"

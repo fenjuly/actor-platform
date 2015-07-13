@@ -161,6 +161,10 @@ class ConversationBaseViewController: SLKTextViewController, MessagesLayoutDeleg
         
     }
     
+    func itemsWillForceReload(indexes: [Int]) {
+        
+    }
+    
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
         super.willRotateToInterfaceOrientation(toInterfaceOrientation, duration: duration)
 
@@ -225,6 +229,7 @@ class ConversationBaseViewController: SLKTextViewController, MessagesLayoutDeleg
     
     func updateRows(indexes: [Int]) {
         var forcedRows = [NSIndexPath]()
+        var forcedIndexes = [Int]()
         
         var visibleIndexes = self.collectionView.indexPathsForVisibleItems() as! [NSIndexPath]
         for ind in indexes {
@@ -237,7 +242,7 @@ class ConversationBaseViewController: SLKTextViewController, MessagesLayoutDeleg
                     continue
                 }
             }
-            
+            forcedIndexes.append(ind)
             forcedRows.append(indexPath)
         }
         

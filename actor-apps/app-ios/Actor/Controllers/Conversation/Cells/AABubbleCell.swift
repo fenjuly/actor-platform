@@ -75,6 +75,7 @@ class AABubbleCell: UICollectionViewCell {
     // Binded data
     var peer: AMPeer!
     var controller: ConversationViewController!
+    var changedClosure: (()->())?
     var isGroup: Bool = false
     var isFullSize: Bool!
     var bindedSetting: CellSetting?
@@ -134,9 +135,10 @@ class AABubbleCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setConfig(peer: AMPeer, controller: ConversationViewController) {
+    func setConfig(peer: AMPeer, controller: ConversationViewController, changedClosure: ()->()) {
         self.peer = peer
         self.controller = controller
+        self.changedClosure = changedClosure
         if (peer.getPeerType().ordinal() == jint(AMPeerType.GROUP.rawValue) && !isFullSize) {
             self.isGroup = true
         }
@@ -146,6 +148,15 @@ class AABubbleCell: UICollectionViewCell {
         return false
     }
 
+    func notifyContentChanged() {
+        changedClosure?()
+    }
+    
+//    override func canBecomeFirstResponder() -> Bool {
+//        return true
+//    }
+//    
+    
     override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
         if action == "delete:" {
             return true

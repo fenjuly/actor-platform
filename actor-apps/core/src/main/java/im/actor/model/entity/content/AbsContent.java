@@ -27,7 +27,6 @@ import im.actor.model.droidkit.bser.BserValues;
 import im.actor.model.droidkit.bser.BserWriter;
 import im.actor.model.droidkit.bser.DataInput;
 import im.actor.model.droidkit.bser.DataOutput;
-import im.actor.model.droidkit.json.JSONObject;
 import im.actor.model.entity.compat.content.ObsoleteContent;
 import im.actor.model.entity.content.internal.AbsContentContainer;
 import im.actor.model.entity.content.internal.AbsLocalContent;
@@ -115,11 +114,7 @@ public abstract class AbsContent {
                         return new ServiceContent(remoteContainer);
                     }
                 } else if (content instanceof JsonMessage) {
-                    JsonMessage json = (JsonMessage) content;
-                    JSONObject object = new JSONObject(json.getRawJson());
-                    if (object.getString("dataType").equals("banner")) {
-                        return new BannerContent(remoteContainer);
-                    }
+                    return new JsonContent(remoteContainer);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

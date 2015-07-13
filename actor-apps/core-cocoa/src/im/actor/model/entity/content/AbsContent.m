@@ -30,11 +30,10 @@
 #include "im/actor/model/droidkit/bser/DataInput.h"
 #include "im/actor/model/droidkit/bser/DataOutput.h"
 #include "im/actor/model/droidkit/bser/util/SparseArray.h"
-#include "im/actor/model/droidkit/json/JSONObject.h"
 #include "im/actor/model/entity/compat/content/ObsoleteContent.h"
 #include "im/actor/model/entity/content/AbsContent.h"
-#include "im/actor/model/entity/content/BannerContent.h"
 #include "im/actor/model/entity/content/DocumentContent.h"
+#include "im/actor/model/entity/content/JsonContent.h"
 #include "im/actor/model/entity/content/PhotoContent.h"
 #include "im/actor/model/entity/content/ServiceContent.h"
 #include "im/actor/model/entity/content/ServiceGroupAvatarChanged.h"
@@ -196,11 +195,7 @@ AMAbsContent *AMAbsContent_convertDataWithImActorModelEntityContentInternalAbsCo
         }
       }
       else if ([content isKindOfClass:[APJsonMessage class]]) {
-        APJsonMessage *json = (APJsonMessage *) check_class_cast(content, [APJsonMessage class]);
-        ImActorModelDroidkitJsonJSONObject *object = new_ImActorModelDroidkitJsonJSONObject_initWithNSString_([((APJsonMessage *) nil_chk(json)) getRawJson]);
-        if ([((NSString *) nil_chk([object getStringWithNSString:@"dataType"])) isEqual:@"banner"]) {
-          return new_AMBannerContent_initWithImActorModelEntityContentInternalContentRemoteContainer_(remoteContainer);
-        }
+        return new_AMJsonContent_initWithImActorModelEntityContentInternalContentRemoteContainer_(remoteContainer);
       }
     }
     @catch (JavaLangException *e) {

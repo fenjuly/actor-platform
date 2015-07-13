@@ -53,24 +53,33 @@ class MessagesLayouting {
 
         var content = message.getContent()!
         
-        var res: CellLayout
         if (content is AMTextContent) {
-            res = TextCellLayout(message: message)
+            return TextCellLayout(message: message)
         } else if (content is AMPhotoContent) {
-            res = CellLayout(message: message)
+            var res = CellLayout(message: message)
             res.height = AABubbleMediaCell.measureMediaHeight(message)
+            return res
         } else if (content is AMServiceContent) {
-            res = CellLayout(message: message)
+            var res = CellLayout(message: message)
             res.height = AABubbleServiceCell.measureServiceHeight(message)
+            return res
         } else if (content is AMDocumentContent) {
-            res = CellLayout(message: message)
+            var res = CellLayout(message: message)
             res.height = AABubbleDocumentCell.measureDocumentHeight(message)
-        } else {
-            // Unsupported
-            res = TextCellLayout(message: message)
+            return res
+        } else if (content is AMJsonContent) {
+            var jsonContent = content as! AMJsonContent
+            var banner = BannerContent.fromJson(jsonContent)
+            if (banner != nil) {
+                var res = CellLayout(message: message)
+                res.height = AABubbleAdCell.measureHeight(message)
+                
+                return res
+            }
         }
         
-        return res
+        // Unsupported
+        return TextCellLayout(message: message)
     }
 }
 
