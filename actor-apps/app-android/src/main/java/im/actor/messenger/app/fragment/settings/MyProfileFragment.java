@@ -231,7 +231,6 @@ public class MyProfileFragment extends BaseFragment {
         });
 
         balance = (TextView) view.findViewById(R.id.balance_tv);
-        balance.setText(getString(R.string.settings_balance).concat(" ..."));
 
         view.findViewById(R.id.avatar).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -305,7 +304,8 @@ public class MyProfileFragment extends BaseFragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        balance.setText(getString(R.string.settings_balance).concat(" ").concat(res.getBalance()));
+                        balance.setText(" ".concat(res.getBalance()));
+                        showView(balance);
                     }
                 });
             }

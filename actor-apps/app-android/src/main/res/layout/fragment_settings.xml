@@ -116,7 +116,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:background="@drawable/selector"
-                        android:clickable="true">
+                        android:clickable="true"
+                        android:orientation="horizontal">
 
                         <im.actor.messenger.app.view.TintImageView
                             android:layout_width="72dp"
@@ -125,13 +126,22 @@
                             app:tintColor="@color/settings_icon" />
 
                         <TextView
-                            android:id="@+id/balance_tv"
-                            android:layout_width="match_parent"
+                            android:id="@+id/balance_title_tv"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="left|center_vertical"
                             android:text="@string/settings_balance"
                             android:textColor="@color/settings_title"
                             android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/balance_tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="left|center_vertical"
+                            android:textColor="@color/settings_title"
+                            android:textSize="16sp"
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <View
