@@ -37,12 +37,12 @@ public class AddMemberFragment extends BaseContactFragment {
 
     @Override
     protected void addFootersAndHeaders() {
-       addFooterOrHeaderAction(R.color.contacts_action_add, R.drawable.ic_person_add_white_24dp, R.string.contacts_invite_via_link, false, new Runnable() {
-            @Override
-            public void run() {
-                startActivity(Intents.inviteLink(getArguments().getInt("GROUP_ID", 0), getActivity()));
-            }
-        }, true);
+//       addFooterOrHeaderAction(R.color.contacts_action_add, R.drawable.ic_person_add_white_24dp, R.string.contacts_invite_via_link, false, new Runnable() {
+//            @Override
+//            public void run() {
+//                startActivity(Intents.inviteLink(getArguments().getInt("GROUP_ID", 0), getActivity()));
+//            }
+//        }, true);
     }
 
     @Override

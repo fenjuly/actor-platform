@@ -338,9 +338,10 @@ public class GroupInfoFragment extends BaseFragment {
             startActivity(Intents.editGroupTitle(chatId, getActivity()));
         } else if (item.getItemId() == R.id.changePhoto) {
             startActivity(ViewAvatarActivity.viewGroupAvatar(chatId, getActivity()));
-        } else if (item.getItemId() == R.id.integrationToken) {
-            startActivity(Intents.integrationToken(chatId, getActivity()));
         }
+//        else if (item.getItemId() == R.id.integrationToken) {
+//            startActivity(Intents.integrationToken(chatId, getActivity()));
+//        }
         return super.onOptionsItemSelected(item);
     }
 

@@ -21,9 +21,9 @@
         android:id="@+id/changePhoto"
         android:title="@string/group_menu_change_photo" />
 
-    <item
-        android:id="@+id/integrationToken"
-        android:title="@string/group_menu_integration_token" />
+    <!--<item-->
+    <!--android:id="@+id/integrationToken"-->
+    <!--android:title="@string/group_menu_integration_token" />-->
 
     <item
         android:id="@+id/leaveGroup"
