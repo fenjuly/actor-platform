@@ -252,7 +252,7 @@
 
 "Placeholder_Empty_Title" = "Пригласите своих друзей";
 
-"Placeholder_Empty_Message" = "Никто из ваших контактов не использует Актор. Используйте кнопку ниже что бы пригласить их.";
+"Placeholder_Empty_Message" = "Никто из ваших контактов не использует Llectro. Используйте кнопку ниже что бы пригласить их.";
 
 "Placeholder_Empty_Action" = "РАССКАЗАТЬ ДРУЗЬЯМ";
 
@@ -266,7 +266,7 @@
 
 "Placeholder_Contacts_Title" = "Пригласите своих друзей";
 
-"Placeholder_Contacts_Message" = "Никто из ваших контактов не использует Актор. Используйте кнопку ниже что бы пригласить их.";
+"Placeholder_Contacts_Message" = "Никто из ваших контактов не использует Llectro. Используйте кнопку ниже что бы пригласить их.";
 
 "Placeholder_Contacts_Action" = "РАССКАЗАТЬ ДРУЗЬЯМ";
 
@@ -312,7 +312,7 @@
 
 "CurrentLocale" = "Ru";
 
-"InviteText" = "Привет! Давай продолжим наше общение в Акторе https://actor.im/dl";
+"InviteText" = "Привет! Давай продолжим наше общение в Llectro https://actor.im/dl";
 
 "PhotoRemove" = "Удалить фото";
 

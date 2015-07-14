@@ -250,7 +250,7 @@
 
 "Placeholder_Empty_Title" = "Invite your friends";
 
-"Placeholder_Empty_Message" = "None of your contacts use Actor. Use button bellow to invite them.";
+"Placeholder_Empty_Message" = "None of your contacts use Llectro. Use button bellow to invite them.";
 
 "Placeholder_Empty_Action" = "TELL A FRIEND";
 
@@ -264,7 +264,7 @@
 
 "Placeholder_Contacts_Title" = "Invite your friends";
 
-"Placeholder_Contacts_Message" = "None of your contacts use Actor. Use button bellow to invite them.";
+"Placeholder_Contacts_Message" = "None of your contacts use Llectro. Use button bellow to invite them.";
 
 "Placeholder_Contacts_Action" = "TELL A FRIEND";
 
@@ -310,7 +310,7 @@
 
 "CurrentLocale" = "En";
 
-"InviteText" = "Hi! Let's switch to Actor! https://actor.im/dl";
+"InviteText" = "Hi! Let's switch to Llectro! https://actor.im/dl";
 
 "PhotoRemove" = "Delete Photo";
 
