@@ -38,12 +38,6 @@ class LlectroServiceImpl(llectro: Llectro)(implicit db: Database, actorSystem: A
     db.run(toDBIOAction(action))
   }
 
-  override def jhandleNotifyBannerClick(bannerId: Int, clientData: im.actor.api.rpc.ClientData): Future[HandlerResult[ResponseVoid]] =
-    Future.successful(Error(CommonErrors.UnsupportedRequest))
-
-  override def jhandleNotifyBannerView(bannerId: Int, viewDuration: Int, clientData: im.actor.api.rpc.ClientData): Future[HandlerResult[ResponseVoid]] =
-    Future.successful(Error(CommonErrors.UnsupportedRequest))
-
   override def jhandleDisableInterests(interests: Vector[Int], clientData: ClientData): Future[HandlerResult[ResponseVoid]] = {
     val action =
       requireAuth(clientData).map { client ⇒
