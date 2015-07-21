@@ -189,7 +189,7 @@ object Build extends sbt.Build {
       Seq(
         libraryDependencies ++= Dependencies.llectro
       )
-  ).dependsOn(actorPersist)
+  ).dependsOn(actorPersist, actorUtils)
 
   lazy val actorOAuth = Project(
     id = "actor-oauth",

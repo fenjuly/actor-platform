@@ -14,8 +14,10 @@ import slick.driver.PostgresDriver.api._
 import slick.profile.FixedSqlAction
 
 import im.actor.server.llectro.results.{ UserBalance, Banner, Errors }
-import im.actor.server.models.llectro.{ LlectroUser, Interest }
+import im.actor.server.models.llectro.{ AdActionType, LlectroUser, Interest }
 import im.actor.server.{ models, persist }
+
+import scala.concurrent.forkjoin.ThreadLocalRandom
 
 class Llectro(implicit system: ActorSystem) {
   private implicit val ec = system.dispatcher
@@ -103,4 +105,24 @@ class Llectro(implicit system: ActorSystem) {
       persist.llectro.Interest.createOrUpdate(interests)
     } map (_.sum)
   }
+
+  def updateAdClicks(userUUID: UUID, bannerIds: Seq[Int]): Future[Either[Errors, Unit]] =
+    users.updateAdClicks(userUUID, bannerIds)
+
+  def updateAdShows(userUUID: UUID, bannerIds: Seq[Int]): Future[Either[Errors, Unit]] =
+    users.updateAdShows(userUUID, bannerIds)
+
+  def registerAdAction(userUUID: UUID, bannerId: Int, actionType: AdActionType)(implicit db: Database): Future[Unit] = {
+    val action = models.llectro.LlectroAdAction(
+      id = ThreadLocalRandom.current().nextLong(),
+      userUUID = userUUID,
+      bannerId = bannerId,
+      actionType = actionType,
+      sentAt = None
+    )
+    db.run {
+      persist.llectro.LlectroAdAction.create(action)
+    } map (_ ⇒ ())
+  }
+
 }

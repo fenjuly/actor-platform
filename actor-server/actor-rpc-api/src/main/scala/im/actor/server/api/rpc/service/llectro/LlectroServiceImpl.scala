@@ -2,6 +2,8 @@ package im.actor.server.api.rpc.service.llectro
 
 import java.util.UUID
 
+import im.actor.server.models.llectro.{ AdClick, AdShow }
+
 import scala.concurrent.{ ExecutionContext, Future }
 
 import akka.actor.ActorSystem
@@ -15,6 +17,7 @@ import im.actor.api.rpc.misc.ResponseVoid
 import im.actor.server.llectro.Llectro
 import im.actor.server.persist
 import im.actor.server.util.UserUtils
+import DBIOResult._
 
 object Errors {
   val LlectroNotInitialized = RpcError(400, "LLECTRO_USER_NOT_INITIALIZED", "", false, None)
@@ -92,6 +95,26 @@ class LlectroServiceImpl(llectro: Llectro)(implicit db: Database, actorSystem: A
         } yield Ok(ResponseGetBalance(balance))
         case None ⇒ DBIO.successful(Error(Errors.LlectroNotInitialized))
       }
+    }
+    db.run(toDBIOAction(authorizedAction))
+  }
+
+  override def jhandleNotifyBannerClick(bannerId: Int, clientData: ClientData): Future[HandlerResult[ResponseVoid]] = {
+    val authorizedAction = requireAuth(clientData).map { client ⇒
+      (for {
+        user ← fromDBIOOption(Errors.LlectroNotInitialized)(persist.llectro.LlectroUser.findByUserId(client.userId))
+        _ ← fromFuture(llectro.registerAdAction(user.uuid, bannerId, AdClick))
+      } yield ResponseVoid).run
+    }
+    db.run(toDBIOAction(authorizedAction))
+  }
+
+  override def jhandleNotifyBannerView(bannerId: Int, viewDuration: Int, clientData: ClientData): Future[HandlerResult[ResponseVoid]] = {
+    val authorizedAction = requireAuth(clientData).map { client ⇒
+      (for {
+        user ← fromDBIOOption(Errors.LlectroNotInitialized)(persist.llectro.LlectroUser.findByUserId(client.userId))
+        _ ← fromFuture(llectro.registerAdAction(user.uuid, bannerId, AdShow))
+      } yield ResponseVoid).run
     }
     db.run(toDBIOAction(authorizedAction))
   }

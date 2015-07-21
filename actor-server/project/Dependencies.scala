@@ -115,7 +115,7 @@ object Dependencies {
 
   val email = shared ++ Seq(akkaActor, apacheEmail)
 
-  val llectro = shared ++ Seq(akkaActor, akkaHttpCore, akkaHttp, akkaStream, playJson)
+  val llectro = shared ++ Seq(akkaActor, akkaContrib, akkaHttpCore, akkaHttp, akkaStream, playJson)
 
   val internalServices = shared ++ Seq(akkaActor, akkaStream, scodecBits)
 

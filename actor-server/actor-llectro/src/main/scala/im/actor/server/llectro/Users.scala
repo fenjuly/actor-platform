@@ -103,6 +103,32 @@ private[llectro] class Users(
     )
   }
 
+  def updateAdShows(userUuid: UUID, bannerIds: Seq[Int]): Future[Either[Errors, Unit]] = {
+    val banners = s"${bannerIds mkString ","}"
+    processRequest(
+      HttpRequest(
+        method = POST,
+        uri = s"$baseUrl/$resourceName/$userUuid/banners/shows",
+        entity = Json.stringify(Json.toJson(dataObj(banners)))
+      ),
+      onSuccess = (entity) ⇒ Future(Right(())),
+      onFailure = defaultFailure
+    )
+  }
+
+  def updateAdClicks(userUuid: UUID, bannerIds: Seq[Int]): Future[Either[Errors, Unit]] = {
+    val banners = s"${bannerIds mkString ","}"
+    processRequest(
+      HttpRequest(
+        method = POST,
+        uri = s"$baseUrl/$resourceName/$userUuid/banners/clicks",
+        entity = Json.stringify(Json.toJson(dataObj(banners)))
+      ),
+      onSuccess = (entity) ⇒ Future(Right(())),
+      onFailure = defaultFailure
+    )
+  }
+
   def dataObj(str: String): JsObject = {
     JsObject(Seq("data" → JsString(str)))
   }
