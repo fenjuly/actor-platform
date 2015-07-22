@@ -41,8 +41,9 @@ object GroupUtils {
               (userIdsAcc :+ groupUser.userId, membersAcc :+ member)
           }
         } else (Vector.empty[Int], Vector.empty[Member])
+
       Group(
-        group.id,
+        id = group.id,
         accessHash = group.accessHash,
         title = group.title,
         avatar = groupAvatarModelOpt map getAvatar,
