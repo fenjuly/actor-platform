@@ -29,7 +29,9 @@ object LlectroAdAction {
     actions += adActions
 
   def findNotSent(actionType: models.llectro.AdActionType) =
-    notSent.filter(_.actionType === actionType).groupBy(_.userUUID).result
+    notSent.filter(_.actionType === actionType).result
+  //todo: can't user groupBy because of this https://github.com/slick/slick/issues/625
+  //notSent.filter(_.actionType === actionType).groupBy(_.userUUID).result
 
   def markSent(ids: Set[Long]) =
     actions.filter(_.id inSet ids).map(_.sentAt).update(Some(LocalDateTime.now(ZoneOffset.UTC)))

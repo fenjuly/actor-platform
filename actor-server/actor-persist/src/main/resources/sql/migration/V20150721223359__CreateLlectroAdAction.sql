@@ -1,5 +1,5 @@
 create table llectro_ad_actions(
-    id int not null,
+    id bigint not null,
     user_uuid UUID not null,
     banner_id int not null,
     action_type int not null,
