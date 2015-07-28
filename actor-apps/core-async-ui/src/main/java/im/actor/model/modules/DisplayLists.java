@@ -14,6 +14,7 @@ import im.actor.model.entity.Dialog;
 import im.actor.model.entity.Message;
 import im.actor.model.entity.Peer;
 import im.actor.model.entity.SearchEntity;
+import im.actor.model.entity.content.BannerContent;
 import im.actor.model.mvvm.BindedDisplayList;
 import im.actor.model.mvvm.DisplayList;
 import im.actor.model.mvvm.MVVMEngine;
@@ -159,6 +160,11 @@ public class DisplayLists extends BaseModule {
                 public void onItemTouched(Message item) {
                     if (item.isOnServer()) {
                         modules().getMessagesModule().onMessageShown(peer, item.getSortDate());
+                        if (item.getContent() instanceof BannerContent) {
+                            BannerContent banner = (BannerContent) item.getContent();
+                            modules().getMessagesModule().onBanerShown(0, 0);
+                        }
+
                     }
                 }
             };

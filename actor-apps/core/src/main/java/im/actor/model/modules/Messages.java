@@ -14,6 +14,7 @@ import im.actor.model.api.OutPeer;
 import im.actor.model.api.base.SeqUpdate;
 import im.actor.model.api.rpc.RequestClearChat;
 import im.actor.model.api.rpc.RequestDeleteChat;
+import im.actor.model.api.rpc.RequestNotifyBannerView;
 import im.actor.model.api.rpc.ResponseSeq;
 import im.actor.model.api.updates.UpdateChatClear;
 import im.actor.model.api.updates.UpdateChatDelete;
@@ -271,6 +272,10 @@ public class Messages extends BaseModule {
     public void onMessageShown(Peer peer, long sortDate) {
         ownReadActor.send(new OwnReadActor.MessageRead(peer, sortDate));
         conversationActor(peer).send(new ConversationActor.MessageReadByMe(sortDate));
+    }
+
+    public void onBanerShown(int bannerId, int duration) {
+        request(new RequestNotifyBannerView(bannerId, duration));
     }
 
     public void saveReadState(Peer peer, long lastReadDate) {
