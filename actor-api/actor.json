@@ -7333,6 +7333,49 @@
             ],
             "attributes": []
           }
+        },
+        {
+          "type": "rpc",
+          "content": {
+            "name": "SetBannersFrequency",
+            "header": 167,
+            "response": {
+              "type": "reference",
+              "name": "Void"
+            },
+            "doc": [
+              "Set banners frequency"
+            ],
+            "attributes": [
+              {
+                "type": "double",
+                "id": 1,
+                "name": "value"
+              }
+            ]
+          }
+        },
+        {
+          "type": "rpc",
+          "content": {
+            "name": "GetBannersFrequency",
+            "header": 168,
+            "response": {
+              "type": "anonymous",
+              "header": 169,
+              "attributes": [
+                {
+                  "type": "double",
+                  "id": 1,
+                  "name": "value"
+                }
+              ]
+            },
+            "doc": [
+              "Get banners frequency"
+            ],
+            "attributes": []
+          }
         }
       ]
     },
