@@ -6531,6 +6531,42 @@
           <property role="NXePf" value="Get current balance" />
         </node>
       </node>
+      <node concept="2m6fVq" id="2xqJGfKnHCG" role="2m5mJr">
+        <property role="TrG5h" value="SetBannersFrequency" />
+        <node concept="2m7Kf5" id="2xqJGfKnHDX" role="2m0hLx">
+          <property role="2m7DUN" value="1" />
+          <property role="TrG5h" value="value" />
+          <node concept="3GIWu7" id="2xqJGfKnHE1" role="2m7DVh" />
+        </node>
+        <node concept="Nu42z" id="2xqJGfKnHCH" role="NuuwV">
+          <property role="Nu42W" value="A7" />
+        </node>
+        <node concept="2m1Rp1" id="2xqJGfKnHEc" role="2m6efq">
+          <ref role="2m1o9l" node="GBscvBB6_K" resolve="Void" />
+        </node>
+        <node concept="NXeRC" id="2xqJGfKnHEf" role="1GBnQ6">
+          <property role="NXePf" value="Set banners frequency" />
+        </node>
+      </node>
+      <node concept="2m6fVq" id="2xqJGfKnHFy" role="2m5mJr">
+        <property role="TrG5h" value="GetBannersFrequency" />
+        <node concept="Nu42z" id="2xqJGfKnHFz" role="NuuwV">
+          <property role="Nu42W" value="A8" />
+        </node>
+        <node concept="2m1R6W" id="2xqJGfKnHGT" role="2m6efq">
+          <node concept="2m7Kf5" id="2xqJGfKnHGY" role="2m0hLx">
+            <property role="2m7DUN" value="1" />
+            <property role="TrG5h" value="value" />
+            <node concept="3GIWu7" id="2xqJGfKnHH2" role="2m7DVh" />
+          </node>
+          <node concept="Nu42z" id="2xqJGfKnHGU" role="NuuwV">
+            <property role="Nu42W" value="A9" />
+          </node>
+        </node>
+        <node concept="NXeRC" id="2xqJGfKnHH5" role="1GBnQ6">
+          <property role="NXePf" value=" Get banners frequency" />
+        </node>
+      </node>
       <node concept="1Dx9M1" id="2tyCW$U3RVs" role="1Dx9rD">
         <property role="1Dx9K7" value="llectro Advertisment API" />
       </node>
