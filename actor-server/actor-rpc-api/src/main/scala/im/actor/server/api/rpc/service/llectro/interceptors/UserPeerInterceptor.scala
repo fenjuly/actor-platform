@@ -17,40 +17,49 @@ import im.actor.api.rpc.Update
 import im.actor.api.rpc.files.FileLocation
 import im.actor.api.rpc.messaging.{ JsonMessage, UpdateMessage, UpdateMessageContentChanged, UpdateMessageDateChanged }
 import im.actor.api.rpc.peers.Peer
-import im.actor.api.rpc.peers.PeerType.Private
-import im.actor.server.api.rpc.service.llectro.{ LlectroAds, LlectroInterceptionConfig, Message, MessageFormats }
+import im.actor.api.rpc.peers.PeerType._
+import im.actor.server.api.rpc.service.llectro.{ LlectroAds, Message, MessageFormats }
 import im.actor.server.api.rpc.service.messaging.{ Events, MessagingService }
 import im.actor.server.llectro.results.Banner
-import im.actor.server.models
+import im.actor.server.{ persist, models }
 import im.actor.server.push.{ SeqUpdatesManager, SeqUpdatesManagerRegion }
 
-object PrivatePeerInterceptor {
+object UserPeerInterceptor {
 
   /**
    * Message that stores optional `randomId` of an ad message
    * it should be a collection of authId -> randomIdOpt pairs
-   * @param randomId `randomId` of an ad message
+   * @param randomIds `randomId` of an ad message
    */
   case class PublishedAd(randomIds: Seq[(Long, Option[Long])])
 
+  private[llectro] case object FetchGroups
+
+  private[llectro] case class SubscribeGroups(groups: Set[Int])
+
+  private[llectro] val DefaultBannerFrequency: Double = 0.5
+  val BannerFrequencyProperty: String = "llectro.banners.frequency"
+
+  case class UpdateFrequency(frequency: Double)
+
   def props(
-    llectroAds:         LlectroAds,
-    adsUser:            models.llectro.LlectroUser,
-    interceptionConfig: LlectroInterceptionConfig,
-    mediator:           ActorRef
+    llectroAds:      LlectroAds,
+    adsUser:         models.llectro.LlectroUser,
+    bannerFrequency: Double,
+    mediator:        ActorRef
   )(
     implicit
     db:                  Database,
     seqUpdManagerRegion: SeqUpdatesManagerRegion
   ) =
-    Props(classOf[PrivatePeerInterceptor], llectroAds, adsUser, interceptionConfig, mediator, db, seqUpdManagerRegion)
+    Props(classOf[UserPeerInterceptor], llectroAds, adsUser, bannerFrequency, mediator, db, seqUpdManagerRegion)
 }
 
-class PrivatePeerInterceptor(
-  llectroAds:         LlectroAds,
-  adsUser:            models.llectro.LlectroUser,
-  interceptionConfig: LlectroInterceptionConfig,
-  mediator:           ActorRef
+class UserPeerInterceptor(
+  llectroAds:      LlectroAds,
+  adsUser:         models.llectro.LlectroUser,
+  bannerFrequency: Double,
+  mediator:        ActorRef
 )(
   implicit
   db:                  Database,
@@ -60,28 +69,48 @@ class PrivatePeerInterceptor(
 
   import PeerInterceptor._
   import MessageFormats._
-  import PrivatePeerInterceptor._
+  import UserPeerInterceptor._
 
-  val MessagesBetweenAds = interceptionConfig.messagesBetweenAds
-
-  private[this] var countdown: Int = MessagesBetweenAds
-  private[this] var adRandomIds = Map.empty[Long, Long]
-
+  private[this] val initialInterval = calculateAdsInterval(bannerFrequency)
   private[this] val scheduledResubscribe = system.scheduler.schedule(Duration.Zero, 5.minutes) { self ! Resubscribe }
 
-  def receive = {
+  private[this] var adRandomIds = Map.empty[Long, Long]
+  private[this] var userGroups: Set[Int] = Set.empty[Int]
+
+  def receive = init(initialInterval)
+
+  def init(adsInterval: Int): Receive = {
     case Resubscribe ⇒
-      val peer = Peer(Private, adsUser.userId)
-      mediator ! Subscribe(MessagingService.messagesTopic(peer), Some(interceptorGroupId(peer)), self)
-    case ack: SubscribeAck ⇒
+      val privatePeer = Peer(Private, adsUser.userId)
+      mediator ! Subscribe(MessagingService.messagesTopic(privatePeer), Some(interceptorGroupId(privatePeer)), self)
+    case SubscribeAck(Subscribe(topic, _, _)) ⇒
+      log.debug("got ack to topic {}", topic)
       scheduledResubscribe.cancel()
+      context become working(adsInterval, adsInterval)
+      system.scheduler.schedule(Duration.Zero, 1.minute) { self ! FetchGroups }
+  }
+
+  def working(adsInterval: Int, countdown: Int): Receive = {
+    case UpdateFrequency(newFrequency)        ⇒ context become working(calculateAdsInterval(newFrequency), countdown)
+    case FetchGroups                          ⇒ fetchGroups()
+    case SubscribeAck(Subscribe(topic, _, _)) ⇒ log.debug("got ack to topic {}", topic)
+    case SubscribeGroups(groupIds) ⇒
+      val newGroups = groupIds diff userGroups
+      newGroups foreach { groupId ⇒
+        val peer = Peer(Group, groupId)
+        mediator ! Subscribe(MessagingService.messagesTopic(peer), Some(interceptorGroupId(peer)), self)
+      }
+      userGroups ++= groupIds
     case Events.PeerMessage(fromPeer, toPeer, _, _, _) ⇒
-      log.debug("New message, increasing counter")
-      countdown -= 1
-      if (countdown == 0) {
-        val dialogPeer =
-          if (toPeer.id == adsUser.userId) fromPeer else toPeer
-        insertAds(dialogPeer.asStruct)
+      log.debug("New message, decrement counter")
+      if(adsInterval != 0) {
+        if ((countdown - 1) == 0) {
+          context become working(adsInterval, adsInterval)
+          val dialogPeer = if (toPeer.id == adsUser.userId) fromPeer else toPeer
+          insertAds(dialogPeer.asStruct)
+        } else {
+          context become working(adsInterval, countdown - 1)
+        }
       }
     case PublishedAd(ids) ⇒
       ids foreach {
@@ -90,8 +119,19 @@ class PrivatePeerInterceptor(
             adRandomIds = adRandomIds + (authId → randomId)
           }
       }
+  }
 
-      countdown = MessagesBetweenAds
+  private def fetchGroups(): Unit = {
+    log.debug("Fetching groups for llectroUser {}", adsUser.uuid)
+    db.run {
+      for {
+        groupUsers ← persist.GroupUser.findByUserId(adsUser.userId)
+        groupIds = groupUsers map (_.groupId)
+      } yield {
+        log.debug("Subscribing user: {} for groups: {}", adsUser.userId, groupIds)
+        self ! SubscribeGroups(groupIds.toSet)
+      }
+    }
   }
 
   private def insertAds(dialogPeer: Peer): Future[PublishedAd] = {
@@ -125,11 +165,11 @@ class PrivatePeerInterceptor(
   private def getUpdates(dialogPeer: Peer, banner: Banner, authId: Long, fileLocation: FileLocation, fileSize: Long): (Option[Long], Seq[Update]) = {
     val message = JsonMessage(
       Json.stringify(Json.toJson(
-        Message.banner(banner.advertUrl, fileLocation.fileId, fileLocation.accessHash, fileSize)
+        Message.banner(banner.id, banner.advertUrl, fileLocation.fileId, fileLocation.accessHash, fileSize)
       ))
     )
 
-    adRandomIds get (authId) match {
+    adRandomIds get authId match {
       case Some(randomId) ⇒
         None → Seq(
           UpdateMessageContentChanged(dialogPeer, randomId, message),
@@ -140,5 +180,7 @@ class PrivatePeerInterceptor(
         Some(randomId) → Seq(UpdateMessage(dialogPeer, adsUser.userId, System.currentTimeMillis(), randomId, message))
     }
   }
+
+  private def calculateAdsInterval(frequency: Double) = 100 - (100 * frequency).toInt
 
 }

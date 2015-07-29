@@ -1,0 +1,1 @@
+insert into config_parameters select user_id, 'llectro.banners.frequency', '0.5' from llectro_users;

@@ -13,7 +13,12 @@ import im.actor.api.rpc.misc.ResponseSeq
 import im.actor.server.sequence.SeqState
 import im.actor.server.user.{ UserOffice, UserViewRegion }
 import im.actor.server.{ models, persist }
+import im.actor.server.api.rpc.service.llectro.interceptors.UserPeerInterceptor
 import im.actor.server.push.SeqUpdatesManagerRegion
+import slick.driver.PostgresDriver.api._
+
+import scala.concurrent.{ ExecutionContext, Future }
+import scala.util.Try
 
 final class ConfigsServiceImpl(implicit userViewRegion: UserViewRegion, seqUpdManagerRegion: SeqUpdatesManagerRegion, db: Database, actorSystem: ActorSystem) extends ConfigsService {
 
@@ -31,6 +36,8 @@ final class ConfigsServiceImpl(implicit userViewRegion: UserViewRegion, seqUpdMa
         }
 
       val update = UpdateParameterChanged(key, value)
+
+      interceptLlectroFrequency(client.userId, key, value)
 
       for {
         _ ← persist.configs.Parameter.createOrUpdate(models.configs.Parameter(client.userId, key, value))
@@ -56,4 +63,12 @@ final class ConfigsServiceImpl(implicit userViewRegion: UserViewRegion, seqUpdMa
 
     db.run(toDBIOAction(authorizedAction))
   }
+
+  private[this] def interceptLlectroFrequency(userId: Int, key: String, value: Option[String]): Unit =
+    if (key == UserPeerInterceptor.BannerFrequencyProperty) {
+      Try(value.map(_.toDouble).get) foreach { bannerFrequency =>
+        val interceptorName = s"user/messagesInterceptorManager/messagesInterceptor/private-$userId"
+        actorSystem.actorSelection(interceptorName) ! UserPeerInterceptor.UpdateFrequency(bannerFrequency)
+      }
+    }
 }

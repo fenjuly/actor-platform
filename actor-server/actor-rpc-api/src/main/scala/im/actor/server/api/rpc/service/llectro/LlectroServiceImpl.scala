@@ -113,6 +113,10 @@ class LlectroServiceImpl(llectro: Llectro)(implicit db: Database, actorSystem: A
     db.run(toDBIOAction(authorizedAction))
   }
 
+  def jhandleGetBannersFrequency(clientData: ClientData): Future[HandlerResult[ResponseGetBannersFrequency]] = ??? //todo: remove after api update
+
+  def jhandleSetBannersFrequency(value: Double, clientData: ClientData): Future[HandlerResult[ResponseVoid]] = ??? //todo: remove after api update
+
   private def getInterestsTree(level: Int, parentId: Int): dbio.DBIOAction[Vector[Interest], NoStream, Read with Effect] = {
     persist.llectro.Interest.find(level, parentId) flatMap { interests ⇒
       DBIO.sequence(interests.toVector map { interest ⇒

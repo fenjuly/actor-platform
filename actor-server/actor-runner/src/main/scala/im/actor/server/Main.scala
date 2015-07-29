@@ -16,6 +16,8 @@ import im.actor.server.api.rpc.service.configs.ConfigsServiceImpl
 import im.actor.server.api.rpc.service.contacts.ContactsServiceImpl
 import im.actor.server.api.rpc.service.files.FilesServiceImpl
 import im.actor.server.api.rpc.service.groups.{ GroupInviteConfig, GroupsServiceImpl }
+import im.actor.server.api.rpc.service.llectro.interceptors.MessageInterceptor
+import im.actor.server.api.rpc.service.llectro.LlectroServiceImpl
 import im.actor.server.api.rpc.service.messaging.MessagingServiceImpl
 import im.actor.server.api.rpc.service.profile.ProfileServiceImpl
 import im.actor.server.api.rpc.service.pubgroups.PubgroupsServiceImpl
@@ -55,7 +57,6 @@ class Main extends Bootable with DbInit with FlywayInit {
   val googlePushConfig = GooglePushManagerConfig.load(serverConfig.getConfig("services.google.push")).get
   val groupInviteConfig = GroupInviteConfig.load(serverConfig.getConfig("enabled-modules.messaging.groups.invite"))
   val webappConfig = HttpApiConfig.load(serverConfig.getConfig("webapp")).toOption.get
-  val llectroInterceptionConfig = LlectroInterceptionConfig.load(serverConfig.getConfig("messaging.llectro"))
   val oauth2GoogleConfig = OAuth2GoogleConfig.load(serverConfig.getConfig("services.google.oauth"))
   val richMessageConfig = RichMessageConfig.load(serverConfig.getConfig("enabled-modules.enricher")).get
   val s3StorageAdapterConfig = S3StorageAdapterConfig.load(serverConfig.getConfig("services.aws.s3")).get
@@ -121,6 +122,7 @@ class Main extends Bootable with DbInit with FlywayInit {
     }
 
     val downloadManager = new DownloadManager
+
     MessageInterceptor.startSingleton(llectro, downloadManager, mediator, llectroInterceptionConfig)
 
     RichMessageWorker.startWorker(richMessageConfig, mediator)

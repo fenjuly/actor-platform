@@ -100,18 +100,6 @@ class Llectro(implicit system: ActorSystem) {
     }
   }
 
-  def persistInterests(interests: List[Interest])(implicit db: Database): Future[Int] = {
-    db.run {
-      persist.llectro.Interest.createOrUpdate(interests)
-    } map (_.sum)
-  }
-
-  def updateAdClicks(userUUID: UUID, bannerIds: Seq[Int]): Future[Either[Errors, Unit]] =
-    users.updateAdClicks(userUUID, bannerIds)
-
-  def updateAdShows(userUUID: UUID, bannerIds: Seq[Int]): Future[Either[Errors, Unit]] =
-    users.updateAdShows(userUUID, bannerIds)
-
   def registerAdAction(userUUID: UUID, bannerId: Int, actionType: AdActionType)(implicit db: Database): Future[Unit] = {
     val action = models.llectro.LlectroAdAction(
       id = ThreadLocalRandom.current().nextLong(),
@@ -124,5 +112,17 @@ class Llectro(implicit system: ActorSystem) {
       persist.llectro.LlectroAdAction.create(action)
     } map (_ ⇒ ())
   }
+
+  private def persistInterests(interests: List[Interest])(implicit db: Database): Future[Int] = {
+    db.run {
+      persist.llectro.Interest.createOrUpdate(interests)
+    } map (_.sum)
+  }
+
+  private[llectro] def updateAdClicks(userUUID: UUID, bannerIds: Seq[Int]): Future[Either[Errors, Unit]] =
+    users.updateAdClicks(userUUID, bannerIds)
+
+  private[llectro] def updateAdShows(userUUID: UUID, bannerIds: Seq[Int]): Future[Either[Errors, Unit]] =
+    users.updateAdShows(userUUID, bannerIds)
 
 }

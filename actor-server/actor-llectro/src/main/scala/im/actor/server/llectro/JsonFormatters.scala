@@ -14,21 +14,9 @@ trait JsonReads {
     (JsPath \ "level").read[Int]
   )(Interest)
 
-  implicit val bannerReads: Reads[Banner] = (
-    (JsPath \ "advertUrl").read[String] and
-    (JsPath \ "imageUrl").read[String]
-  )(Banner)
-
-  implicit val errorsReads: Reads[Errors] = (
-    (JsPath \ "errors").read[String] and
-    (JsPath \ "status").readNullable[Int]
-  )(Errors)
-
-  implicit val userBalanceReads: Reads[UserBalance] = (
-    (JsPath \ "name").read[String] and
-    (JsPath \ "balance").read[BigDecimal]
-  )(UserBalance)
-
+  implicit val bannerReads: Reads[Banner] = Json.reads[Banner]
+  implicit val errorsReads: Reads[Errors] = Json.reads[Errors]
+  implicit val userBalanceReads: Reads[UserBalance] = Json.reads[UserBalance]
 }
 
 trait JsonWrites {

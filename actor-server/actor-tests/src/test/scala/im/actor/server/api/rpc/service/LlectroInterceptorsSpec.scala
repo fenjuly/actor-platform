@@ -12,7 +12,7 @@ import im.actor.api.rpc.messaging._
 import im.actor.api.rpc.peers.{ OutPeer, PeerType }
 import im.actor.server.api.rpc.service.groups.{ GroupInviteConfig, GroupsServiceImpl }
 import im.actor.server.api.rpc.service.llectro.interceptors.MessageInterceptor
-import im.actor.server.api.rpc.service.llectro.{ LlectroInterceptionConfig, LlectroServiceImpl }
+import im.actor.server.api.rpc.service.llectro.LlectroServiceImpl
 import im.actor.server.api.rpc.service.sequence.{ SequenceServiceConfig, SequenceServiceImpl }
 import im.actor.server.llectro.Llectro
 import im.actor.server.oauth.{ GoogleProvider, OAuth2GoogleConfig }
@@ -59,11 +59,11 @@ class LlectroInterceptorsSpec extends BaseAppSuite with GroupsServiceHelpers wit
     lazy val downloadManager = new DownloadManager
 
     object Screen {
-      val W = 1080
-      val H = 1920
+      val W = 600
+      val H = 700
     }
 
-    MessageInterceptor.startSingleton(llectro, downloadManager, mediator, LlectroInterceptionConfig(messageCount))
+    MessageInterceptor.startSingleton(llectro, downloadManager, mediator)
     val interceptorProxy = MessageInterceptor.startSingletonProxy()
 
     val llectroService = new LlectroServiceImpl(llectro)
