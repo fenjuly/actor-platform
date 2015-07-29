@@ -23,6 +23,7 @@ import im.actor.messenger.R;
 import im.actor.messenger.app.fragment.chat.MessagesAdapter;
 import im.actor.messenger.app.fragment.chat.view.FastThumbLoader;
 import im.actor.messenger.app.util.Screen;
+import im.actor.model.api.rpc.RequestNotifyBannerClick;
 import im.actor.model.entity.Message;
 import im.actor.model.entity.content.BannerContent;
 import im.actor.model.files.FileSystemReference;
@@ -103,6 +104,7 @@ public class BannerHolder extends MessageHolder {
     @Override
     public void onClick(final Message currentMessage) {
         context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentContent.getAdUrl())));
+        messenger().executeExternalCommand(new RequestNotifyBannerClick(0));
     }
 
     @Override
