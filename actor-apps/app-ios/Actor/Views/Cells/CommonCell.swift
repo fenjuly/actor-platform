@@ -21,6 +21,7 @@ class CommonCell: UITableViewCell {
     // MARK: Private vars
     
     private var switcher: UISwitch?
+    
     private var topSeparator: UIView?
     private var bottomSeparator: UIView?
     

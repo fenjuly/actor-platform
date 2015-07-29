@@ -72,6 +72,7 @@
 		06562FBC1B3112F8001E4B68 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06562FBB1B3112F8001E4B68 /* Device.swift */; };
 		0657E1A31B26240A0017B724 /* InviteLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0657E1A21B26240A0017B724 /* InviteLinkViewController.swift */; };
 		065808EB1B70444D00A6AA96 /* SettingsInterestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065808EA1B70444D00A6AA96 /* SettingsInterestsViewController.swift */; };
+		065808ED1B70448600A6AA96 /* SliderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065808EC1B70448600A6AA96 /* SliderCell.swift */; };
 		0658FD2C1B6F341C00A6AA96 /* AnalyticsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 0658F73B1B6F341600A6AA96 /* AnalyticsProvider.m */; };
 		0658FD2D1B6F341C00A6AA96 /* MainThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 0658F73E1B6F341600A6AA96 /* MainThread.m */; };
 		0658FD2E1B6F341C00A6AA96 /* Verified.m in Sources */ = {isa = PBXBuildFile; fileRef = 0658F7401B6F341600A6AA96 /* Verified.m */; };
@@ -948,6 +949,7 @@
 		06562FBB1B3112F8001E4B68 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		0657E1A21B26240A0017B724 /* InviteLinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteLinkViewController.swift; sourceTree = "<group>"; };
 		065808EA1B70444D00A6AA96 /* SettingsInterestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsInterestsViewController.swift; sourceTree = "<group>"; };
+		065808EC1B70448600A6AA96 /* SliderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderCell.swift; sourceTree = "<group>"; };
 		0658F6E71B6F152400A6AA96 /* libcore.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libcore.so; sourceTree = "<group>"; };
 		0658F7291B6F295700A6AA96 /* libcore.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcore.so; path = External/libcore.so; sourceTree = "<group>"; };
 		0658F73A1B6F341600A6AA96 /* AnalyticsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyticsProvider.h; sourceTree = "<group>"; };
@@ -2699,6 +2701,7 @@
 		064153FB1B4A25FF00238CB0 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				065808EC1B70448600A6AA96 /* SliderCell.swift */,
 				0699D4D31ADD9F0C0005AB9B /* BasicCell.swift */,
 				0541A0641ACDA7A20028E983 /* CommonCell.swift */,
 				05EDCD3A1ADDA97F00C57CEF /* TitledCell.swift */,
@@ -5527,6 +5530,7 @@
 				0658FE541B6F341C00A6AA96 /* ListEngineDisplayExt.m in Sources */,
 				062774371AC070F700A4A8B3 /* SearchSource.swift in Sources */,
 				0658FFDF1B6F341D00A6AA96 /* ExtensionField.m in Sources */,
+				065808ED1B70448600A6AA96 /* SliderCell.swift in Sources */,
 				06AAD78E1B41FE4B00F0931B /* PublicCell.swift in Sources */,
 				0658FD571B6F341C00A6AA96 /* PublicGroup.m in Sources */,
 				0658FDED1B6F341C00A6AA96 /* UpdateMessageReceived.m in Sources */,

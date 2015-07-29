@@ -157,6 +157,11 @@ class SettingsViewController: AATableViewController {
             self.navigateNext(SettingsInterestsViewController(), removeCurrent: false)
         })
         
+        balanceSection.addCustomCell { (tableView, indexPath) -> UITableViewCell in
+            var res = SliderCell()
+            return res
+        }.setHeight(66)
+        
         balanceSection.addActionCell("SettingsWithdraw", actionClosure: { () -> () in
             self.alertUser("Withdrawing is not implemented!")
         })

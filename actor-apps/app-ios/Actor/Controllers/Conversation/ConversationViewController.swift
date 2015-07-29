@@ -491,10 +491,13 @@ class ConversationViewController: ConversationBaseViewController {
         }
         var rid = message.getRid()
         cell!.setConfig(peer, controller: self) { () -> () in
+            self.layoutCache.remove(rid)
             for ind in 0..<self.getCount() {
                 var obj = self.objectAtIndex(ind) as! AMMessage
                 if obj.getRid() == rid {
-                    self.updateRows([ind])
+                    var forcedRows = [NSIndexPath]()
+                    forcedRows.append(NSIndexPath(forItem: ind, inSection: 0))
+                    self.collectionView.reloadItemsAtIndexPaths(forcedRows)
                     return
                 }
             }
