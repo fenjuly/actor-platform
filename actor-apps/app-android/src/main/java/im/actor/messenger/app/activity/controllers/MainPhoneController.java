@@ -47,8 +47,10 @@ import im.actor.messenger.app.view.HeaderViewRecyclerAdapter;
 import im.actor.messenger.app.view.OnItemClickedListener;
 import im.actor.messenger.app.view.PagerSlidingTabStrip;
 import im.actor.model.api.rpc.RequestGetAvailableInterests;
+import im.actor.model.api.rpc.RequestGetBannersFrequency;
 import im.actor.model.api.rpc.RequestInitLlectro;
 import im.actor.model.api.rpc.ResponseGetAvailableInterests;
+import im.actor.model.api.rpc.ResponseGetBannersFrequency;
 import im.actor.model.api.rpc.ResponseVoid;
 import im.actor.model.concurrency.Command;
 import im.actor.model.concurrency.CommandCallback;
@@ -402,6 +404,19 @@ public class MainPhoneController extends MainBaseController {
                                 });
                             }
 
+                            if (messenger().getBannerFrequency() == 0) {
+                                messenger().executeExternalCommand(new RequestGetBannersFrequency()).start(new CommandCallback<ResponseGetBannersFrequency>() {
+                                    @Override
+                                    public void onResult(ResponseGetBannersFrequency res) {
+                                        messenger().changeBannerFrequency((int) Math.round(res.getValue() * 100));
+                                    }
+
+                                    @Override
+                                    public void onError(Exception e) {
+
+                                    }
+                                });
+                            }
                         }
                     }
                 });

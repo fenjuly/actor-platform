@@ -144,6 +144,7 @@
     <string name="settings_ask">Задать вопрос</string>
     <string name="settings_interests">Интересы</string>
     <string name="settings_balance">Баланс: </string>
+    <string name="settings_banner_frequency">Количество баннеров</string>
     <string name="settings_notifications">Оповещения</string>
     <string name="settings_chat">Настройки чата</string>
     <string name="settings_security">Безопасность</string>

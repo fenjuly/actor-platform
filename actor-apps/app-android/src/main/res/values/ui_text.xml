@@ -146,6 +146,7 @@
     <string name="settings_ask">Ask Question</string>
     <string name="settings_interests">Interests</string>
     <string name="settings_balance">Balance: </string>
+    <string name="settings_banner_frequency">Banner frequency</string>
     <string name="settings_notifications">Notifications</string>
     <string name="settings_chat">Chat Settings</string>
     <string name="settings_security">Security</string>

@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +22,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +44,11 @@ import im.actor.messenger.app.view.TintImageView;
 import im.actor.model.api.Interest;
 import im.actor.model.api.rpc.RequestGetAvailableInterests;
 import im.actor.model.api.rpc.RequestGetBalance;
+import im.actor.model.api.rpc.RequestGetBannersFrequency;
+import im.actor.model.api.rpc.RequestSetBannersFrequency;
 import im.actor.model.api.rpc.ResponseGetAvailableInterests;
 import im.actor.model.api.rpc.ResponseGetBalance;
+import im.actor.model.api.rpc.ResponseVoid;
 import im.actor.model.concurrency.Command;
 import im.actor.model.concurrency.CommandCallback;
 import im.actor.model.mvvm.ValueChangedListener;
@@ -185,6 +190,41 @@ public class MyProfileFragment extends BaseFragment {
                 }
             }
         });
+
+        final SeekBar bar = (SeekBar) view.findViewById(R.id.banner_percent_bar);
+        bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = bar.getProgress();
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                this.progress = progress + 1;
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                double freq = (double) progress / 100;
+                Command<ResponseVoid> changeBannerFreq = messenger().executeExternalCommand(new RequestSetBannersFrequency(freq));
+                changeBannerFreq.start(new CommandCallback<ResponseVoid>() {
+                    @Override
+                    public void onResult(ResponseVoid res) {
+                        messenger().changeBannerFrequency(progress);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
+            }
+        });
+
+        bar.setProgress(messenger().getBannerFrequency());
 
         view.findViewById(R.id.chatSettings).setOnClickListener(new View.OnClickListener() {
             @Override

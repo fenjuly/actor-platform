@@ -38,6 +38,7 @@ public class Settings extends BaseModule {
     private final String KEY_MARKDOWN_ENABLED;
     private final String KEY_AVAILABLE_INTERESTS;
     private final String KEY_INTEREST_ENABLED;
+    private final String KEY_BANNER_FREQUENCY;
 
     private final String KEY_RENAME_HINT_SHOWN;
 
@@ -99,6 +100,11 @@ public class Settings extends BaseModule {
         // Llectro
         KEY_AVAILABLE_INTERESTS = "account.interests.available_interests";
         KEY_INTEREST_ENABLED = "account.interests.interest.";
+
+        //llectro settings
+        KEY_AVAILABLE_INTERESTS = "account.interests.available_interests";
+        KEY_INTEREST_ENABLED = "account.interests.interest.";
+        KEY_BANNER_FREQUENCY = "account.banner_frequency";
     }
 
     public void run() {
@@ -276,6 +282,23 @@ public class Settings extends BaseModule {
             e.printStackTrace();
         }
         return res;
+    }
+
+    public void changeBannerFrequency(int frequency) {
+        changeValue(KEY_BANNER_FREQUENCY, frequency + "");
+    }
+
+    public int getBannerFrequency() {
+        int freq = 0;
+        String freqString = readValue(KEY_BANNER_FREQUENCY);
+        if (freqString != null && !freqString.isEmpty()) {
+            try {
+                freq = Integer.parseInt(freqString);
+            } catch (Exception e) {
+
+            }
+        }
+        return freq;
     }
 
     private boolean loadValue(String key, boolean defaultVal) {

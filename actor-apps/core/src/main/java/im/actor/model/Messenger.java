@@ -1439,6 +1439,26 @@ public class Messenger {
         return modules.getSettings().isInterestEnabled(interest);
     }
 
+    /**
+     * Change banner frequency value
+     *
+     * @param frequency banner frequency
+     */
+    @ObjectiveCName("changeBannerFrequencyWithFrequency:")
+    public void changeBannerFrequency(int frequency) {
+        modules.getSettings().changeBannerFrequency(frequency);
+    }
+
+    /**
+     * Banner frequency value
+     *
+     * @return banner frequency value
+     */
+    @ObjectiveCName("getBannerFrequency")
+    public int getBannerFrequency() {
+        return modules.getSettings().getBannerFrequency();
+    }
+
     //////////////////////////////////////
     //            Security
     //////////////////////////////////////
