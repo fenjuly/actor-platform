@@ -404,19 +404,6 @@ public class MainPhoneController extends MainBaseController {
                                 });
                             }
 
-                            if (messenger().getBannerFrequency() == 0) {
-                                messenger().executeExternalCommand(new RequestGetBannersFrequency()).start(new CommandCallback<ResponseGetBannersFrequency>() {
-                                    @Override
-                                    public void onResult(ResponseGetBannersFrequency res) {
-                                        messenger().changeBannerFrequency((int) Math.round(res.getValue() * 100));
-                                    }
-
-                                    @Override
-                                    public void onError(Exception e) {
-
-                                    }
-                                });
-                            }
                         }
                     }
                 });

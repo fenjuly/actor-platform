@@ -285,7 +285,8 @@ public class Settings extends BaseModule {
     }
 
     public void changeBannerFrequency(int frequency) {
-        changeValue(KEY_BANNER_FREQUENCY, frequency + "");
+        double frequencyDouble = (double) frequency / 100;
+        changeValue(KEY_BANNER_FREQUENCY, frequencyDouble + "");
     }
 
     public int getBannerFrequency() {
@@ -293,7 +294,7 @@ public class Settings extends BaseModule {
         String freqString = readValue(KEY_BANNER_FREQUENCY);
         if (freqString != null && !freqString.isEmpty()) {
             try {
-                freq = Integer.parseInt(freqString);
+                freq = Math.round((int) (Double.parseDouble(freqString) * 100));
             } catch (Exception e) {
 
             }

@@ -198,7 +198,6 @@ public class MyProfileFragment extends BaseFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 this.progress = progress + 1;
-
             }
 
             @Override
@@ -208,19 +207,7 @@ public class MyProfileFragment extends BaseFragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                double freq = (double) progress / 100;
-                Command<ResponseVoid> changeBannerFreq = messenger().executeExternalCommand(new RequestSetBannersFrequency(freq));
-                changeBannerFreq.start(new CommandCallback<ResponseVoid>() {
-                    @Override
-                    public void onResult(ResponseVoid res) {
-                        messenger().changeBannerFrequency(progress);
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-
-                    }
-                });
+                messenger().changeBannerFrequency(progress);
             }
         });
 
