@@ -18,6 +18,7 @@ public class BannerContent extends AbsContent {
 
     private String adUrl;
     private FileReference reference;
+    private int bannerId;
 
     public BannerContent(ContentRemoteContainer contentContainer) throws JSONException {
         super(contentContainer);
@@ -26,7 +27,7 @@ public class BannerContent extends AbsContent {
         JSONObject data = new JSONObject(json).getJSONObject("data");
         JSONObject image = data.getJSONObject("image");
         adUrl = data.getString("advertUrl");
-
+        bannerId = data.getInt("bannerId");
         reference = new FileReference(new FileLocation(
                 image.getLong("fileId"),
                 image.getLong("fileAccessHash")),
@@ -39,5 +40,9 @@ public class BannerContent extends AbsContent {
 
     public FileReference getReference() {
         return reference;
+    }
+
+    public int getBannerId() {
+        return bannerId;
     }
 }

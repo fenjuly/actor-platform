@@ -106,8 +106,8 @@ public class BannerHolder extends MessageHolder {
 
     @Override
     public void onClick(final Message currentMessage) {
-        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentContent.getAdUrl())));
-        Command<ResponseVoid> notifyClick = messenger().executeExternalCommand(new RequestNotifyBannerClick(0));
+        BannerContent content = (BannerContent) currentMessage.getContent();
+        Command<ResponseVoid> notifyClick = messenger().executeExternalCommand(new RequestNotifyBannerClick(content.getBannerId()));
         notifyClick.start(new CommandCallback<ResponseVoid>() {
             @Override
             public void onResult(ResponseVoid res) {
@@ -119,6 +119,7 @@ public class BannerHolder extends MessageHolder {
 
             }
         });
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentContent.getAdUrl())));
     }
 
     @Override

@@ -162,7 +162,7 @@ public class DisplayLists extends BaseModule {
                         modules().getMessagesModule().onMessageShown(peer, item.getSortDate());
                         if (item.getContent() instanceof BannerContent) {
                             BannerContent banner = (BannerContent) item.getContent();
-                            modules().getMessagesModule().onBanerShown(0, 0);
+                            modules().getMessagesModule().onBanerShown(banner.getBannerId(), 0);
                         }
 
                     }
