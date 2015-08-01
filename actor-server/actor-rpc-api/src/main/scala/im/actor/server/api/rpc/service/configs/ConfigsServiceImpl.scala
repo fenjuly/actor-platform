@@ -66,7 +66,7 @@ final class ConfigsServiceImpl(implicit userViewRegion: UserViewRegion, seqUpdMa
 
   private[this] def interceptLlectroFrequency(userId: Int, key: String, value: Option[String]): Unit =
     if (key == UserPeerInterceptor.BannerFrequencyProperty) {
-      Try(value.map(_.toDouble).get) foreach { bannerFrequency =>
+      Try(value.map(_.toDouble).get) foreach { bannerFrequency ⇒
         val interceptorName = s"user/messagesInterceptorManager/messagesInterceptor/private-$userId"
         actorSystem.actorSelection(interceptorName) ! UserPeerInterceptor.UpdateFrequency(bannerFrequency)
       }

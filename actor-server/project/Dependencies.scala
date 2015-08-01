@@ -161,8 +161,6 @@ object Dependencies {
 
   val utilsHttp = shared ++ Seq(akkaActor, akkaHttp, akkaTestkit, scalatest)
 
-  val voximplant = shared ++ Seq(akkaActor, dispatch, playJson)
-
   val tests = shared ++ Seq(
     jfairy, scalacheck, scalatest, slickTestkit, akkaTestkit //, scalaTestPlay
   )

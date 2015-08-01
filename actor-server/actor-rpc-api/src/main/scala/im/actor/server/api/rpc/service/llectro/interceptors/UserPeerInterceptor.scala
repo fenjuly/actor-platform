@@ -103,7 +103,7 @@ class UserPeerInterceptor(
       userGroups ++= groupIds
     case Events.PeerMessage(fromPeer, toPeer, _, _, _) ⇒
       log.debug("New message, decrement counter")
-      if(adsInterval != 0) {
+      if (adsInterval != 0) {
         if ((countdown - 1) == 0) {
           context become working(adsInterval, adsInterval)
           val dialogPeer = if (toPeer.id == adsUser.userId) fromPeer else toPeer

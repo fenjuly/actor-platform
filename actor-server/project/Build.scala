@@ -258,8 +258,8 @@ object Build extends sbt.Build {
       actorSms,
       actorSocial,
       actorUtils,
-      actorUtilsHttp,
-      actorVoximplant)
+      actorUtilsCache,
+      actorUtilsHttp)
 
   lazy val actorSms = Project(
     id = "actor-sms",
@@ -358,14 +358,6 @@ object Build extends sbt.Build {
     base = file("actor-utils-http"),
     settings = defaultSettings ++ Seq(
       libraryDependencies ++= Dependencies.utilsHttp
-    )
-  )
-
-  lazy val actorVoximplant = Project(
-    id = "actor-voximplant",
-    base = file("actor-voximplant"),
-    settings = defaultSettings ++ Seq(
-      libraryDependencies ++= Dependencies.voximplant
     )
   )
 

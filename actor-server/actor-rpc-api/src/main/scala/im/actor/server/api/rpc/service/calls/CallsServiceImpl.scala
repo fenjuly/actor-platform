@@ -1,4 +1,4 @@
-package im.actor.server.api.rpc.calls
+/*package im.actor.server.api.rpc.calls
 
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -66,3 +66,4 @@ final class CallsServiceImpl(voximplant: VoxImplant)(implicit db: Database, acto
     bi.toString(16)
   }
 }
+*/ 
