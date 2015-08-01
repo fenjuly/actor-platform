@@ -66,8 +66,6 @@ public class RpcParser extends BaseParser<RpcScope> {
             case 97: return RequestGetFileUploadUrl.fromBytes(payload);
             case 122: return RequestCommitFileUpload.fromBytes(payload);
             case 142: return RequestGetFileUploadPartUrl.fromBytes(payload);
-            case 130: return RequestInitVoxSupport.fromBytes(payload);
-            case 131: return RequestGetVoxUser.fromBytes(payload);
             case 163: return RequestInitLlectro.fromBytes(payload);
             case 152: return RequestGetAvailableInterests.fromBytes(payload);
             case 157: return RequestEnableInterests.fromBytes(payload);
@@ -75,8 +73,6 @@ public class RpcParser extends BaseParser<RpcScope> {
             case 162: return RequestNotifyBannerView.fromBytes(payload);
             case 166: return RequestNotifyBannerClick.fromBytes(payload);
             case 164: return RequestGetBalance.fromBytes(payload);
-            case 167: return RequestSetBannersFrequency.fromBytes(payload);
-            case 168: return RequestGetBannersFrequency.fromBytes(payload);
             case 134: return RequestGetParameters.fromBytes(payload);
             case 128: return RequestEditParameter.fromBytes(payload);
             case 51: return RequestRegisterGooglePush.fromBytes(payload);
@@ -111,11 +107,8 @@ public class RpcParser extends BaseParser<RpcScope> {
             case 121: return ResponseGetFileUploadUrl.fromBytes(payload);
             case 138: return ResponseCommitFileUpload.fromBytes(payload);
             case 141: return ResponseGetFileUploadPartUrl.fromBytes(payload);
-            case 129: return ResponseInitVoxSupport.fromBytes(payload);
-            case 132: return ResponseGetVoxUser.fromBytes(payload);
             case 153: return ResponseGetAvailableInterests.fromBytes(payload);
             case 165: return ResponseGetBalance.fromBytes(payload);
-            case 169: return ResponseGetBannersFrequency.fromBytes(payload);
             case 135: return ResponseGetParameters.fromBytes(payload);
             case 12: return ResponseGetDifference.fromBytes(payload);
             case 50: return ResponseVoid.fromBytes(payload);

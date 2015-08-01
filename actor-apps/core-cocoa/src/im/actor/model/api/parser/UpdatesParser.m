@@ -8,8 +8,6 @@
 #include "IOSPrimitiveArray.h"
 #include "J2ObjC_source.h"
 #include "im/actor/model/api/parser/UpdatesParser.h"
-#include "im/actor/model/api/updates/UpdateCallEnd.h"
-#include "im/actor/model/api/updates/UpdateCallRing.h"
 #include "im/actor/model/api/updates/UpdateChatClear.h"
 #include "im/actor/model/api/updates/UpdateChatDelete.h"
 #include "im/actor/model/api/updates/UpdateConfig.h"
@@ -108,10 +106,6 @@
     return APUpdateUserLastSeen_fromBytesWithByteArray_(payload);
     case 33:
     return APUpdateGroupOnline_fromBytesWithByteArray_(payload);
-    case 49:
-    return APUpdateCallRing_fromBytesWithByteArray_(payload);
-    case 83:
-    return APUpdateCallEnd_fromBytesWithByteArray_(payload);
     case 131:
     return APUpdateParameterChanged_fromBytesWithByteArray_(payload);
     case 42:

@@ -41,10 +41,8 @@
 #include "im/actor/model/api/rpc/RequestGetParameters.h"
 #include "im/actor/model/api/rpc/RequestGetPublicGroups.h"
 #include "im/actor/model/api/rpc/RequestGetState.h"
-#include "im/actor/model/api/rpc/RequestGetVoxUser.h"
 #include "im/actor/model/api/rpc/RequestImportContacts.h"
 #include "im/actor/model/api/rpc/RequestInitLlectro.h"
-#include "im/actor/model/api/rpc/RequestInitVoxSupport.h"
 #include "im/actor/model/api/rpc/RequestInviteUser.h"
 #include "im/actor/model/api/rpc/RequestJoinGroup.h"
 #include "im/actor/model/api/rpc/RequestJoinGroupDirect.h"
@@ -54,7 +52,8 @@
 #include "im/actor/model/api/rpc/RequestLoadHistory.h"
 #include "im/actor/model/api/rpc/RequestMessageRead.h"
 #include "im/actor/model/api/rpc/RequestMessageReceived.h"
-#include "im/actor/model/api/rpc/RequestNotifyAdView.h"
+#include "im/actor/model/api/rpc/RequestNotifyBannerClick.h"
+#include "im/actor/model/api/rpc/RequestNotifyBannerView.h"
 #include "im/actor/model/api/rpc/RequestRegisterApplePush.h"
 #include "im/actor/model/api/rpc/RequestRegisterGooglePush.h"
 #include "im/actor/model/api/rpc/RequestRemoveAvatar.h"
@@ -98,9 +97,7 @@
 #include "im/actor/model/api/rpc/ResponseGetOAuth2Params.h"
 #include "im/actor/model/api/rpc/ResponseGetParameters.h"
 #include "im/actor/model/api/rpc/ResponseGetPublicGroups.h"
-#include "im/actor/model/api/rpc/ResponseGetVoxUser.h"
 #include "im/actor/model/api/rpc/ResponseImportContacts.h"
-#include "im/actor/model/api/rpc/ResponseInitVoxSupport.h"
 #include "im/actor/model/api/rpc/ResponseIntegrationToken.h"
 #include "im/actor/model/api/rpc/ResponseInviteUrl.h"
 #include "im/actor/model/api/rpc/ResponseJoinGroup.h"
@@ -225,10 +222,6 @@
     return APRequestCommitFileUpload_fromBytesWithByteArray_(payload);
     case 142:
     return APRequestGetFileUploadPartUrl_fromBytesWithByteArray_(payload);
-    case 130:
-    return APRequestInitVoxSupport_fromBytesWithByteArray_(payload);
-    case 131:
-    return APRequestGetVoxUser_fromBytesWithByteArray_(payload);
     case 163:
     return APRequestInitLlectro_fromBytesWithByteArray_(payload);
     case 152:
@@ -238,7 +231,9 @@
     case 158:
     return APRequestDisableInterests_fromBytesWithByteArray_(payload);
     case 162:
-    return APRequestNotifyAdView_fromBytesWithByteArray_(payload);
+    return APRequestNotifyBannerView_fromBytesWithByteArray_(payload);
+    case 166:
+    return APRequestNotifyBannerClick_fromBytesWithByteArray_(payload);
     case 164:
     return APRequestGetBalance_fromBytesWithByteArray_(payload);
     case 134:
@@ -309,10 +304,6 @@
     return APResponseCommitFileUpload_fromBytesWithByteArray_(payload);
     case 141:
     return APResponseGetFileUploadPartUrl_fromBytesWithByteArray_(payload);
-    case 129:
-    return APResponseInitVoxSupport_fromBytesWithByteArray_(payload);
-    case 132:
-    return APResponseGetVoxUser_fromBytesWithByteArray_(payload);
     case 153:
     return APResponseGetAvailableInterests_fromBytesWithByteArray_(payload);
     case 165:
