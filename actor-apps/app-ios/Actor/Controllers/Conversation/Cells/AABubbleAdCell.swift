@@ -55,6 +55,13 @@ class AABubbleAdCell: AABubbleCell {
             bindedFileId = content.fileId
             let currentFileId = bindedFileId
             bindedHeight = AABubbleAdCell.heights[content.fileId]
+            
+            if (bindedHeight != nil) {
+                var app = UIApplication.sharedApplication()
+                var delegate = app.delegate as! AppDelegate
+                var request = APRequestNotifyBannerView(int: jint(bindedBannerId!), withInt: 0)
+                delegate.executeHidden(MSG.executeExternalCommand(request), successBlock: nil, failureBlock: nil)
+            }
         
             downloadCallback = CocoaDownloadCallback(notDownloaded: nil, onDownloading: nil,
                 onDownloaded: { (reference: String) -> () in
@@ -88,8 +95,7 @@ class AABubbleAdCell: AABubbleCell {
     }
     
     func didTap() {
-        if bindedUrl != nil {
-            
+        if bindedUrl != nil {            
             var app = UIApplication.sharedApplication()
             var delegate = app.delegate as! AppDelegate
             
