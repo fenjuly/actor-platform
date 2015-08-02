@@ -69,7 +69,7 @@ object MessageInterceptor {
   }
 }
 
-class MessageInterceptor(
+private[interceptors] final class MessageInterceptor(
   llectroAds: LlectroAds,
   mediator:   ActorRef
 )(implicit db: Database, seqUpdManagerRegion: SeqUpdatesManagerRegion) extends Actor with ActorLogging {

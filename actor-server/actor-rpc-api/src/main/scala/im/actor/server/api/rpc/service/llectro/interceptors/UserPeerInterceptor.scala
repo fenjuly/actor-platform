@@ -38,6 +38,9 @@ object UserPeerInterceptor {
   private[llectro] case class SubscribeGroups(groups: Set[Int])
 
   private[llectro] val DefaultBannerFrequency: Double = 0.5
+  private[llectro] val MaxInterval: Int = 17
+  private[llectro] val MinInterval: Int = 3
+
   val BannerFrequencyProperty: String = "llectro.banners.frequency"
 
   case class UpdateFrequency(frequency: Double)
@@ -55,7 +58,7 @@ object UserPeerInterceptor {
     Props(classOf[UserPeerInterceptor], llectroAds, adsUser, bannerFrequency, mediator, db, seqUpdManagerRegion)
 }
 
-class UserPeerInterceptor(
+private[interceptors] final class UserPeerInterceptor(
   llectroAds:      LlectroAds,
   adsUser:         models.llectro.LlectroUser,
   bannerFrequency: Double,
@@ -84,7 +87,7 @@ class UserPeerInterceptor(
       val privatePeer = Peer(Private, adsUser.userId)
       mediator ! Subscribe(MessagingService.messagesTopic(privatePeer), Some(interceptorGroupId(privatePeer)), self)
     case SubscribeAck(Subscribe(topic, _, _)) ⇒
-      log.debug("got ack to topic {}", topic)
+      log.debug("Intercepting {} with interval {}", adsUser.userId, adsInterval)
       scheduledResubscribe.cancel()
       context become working(adsInterval, adsInterval)
       system.scheduler.schedule(Duration.Zero, 1.minute) { self ! FetchGroups }
@@ -102,7 +105,7 @@ class UserPeerInterceptor(
       }
       userGroups ++= groupIds
     case Events.PeerMessage(fromPeer, toPeer, _, _, _) ⇒
-      log.debug("New message, decrement counter")
+      log.debug("New message, decrement counter: {} of {}", countdown - 1, adsInterval)
       if (adsInterval != 0) {
         if ((countdown - 1) == 0) {
           context become working(adsInterval, adsInterval)
@@ -170,17 +173,17 @@ class UserPeerInterceptor(
     )
 
     adRandomIds get authId match {
-      case Some(randomId) ⇒
+      /*case Some(randomId) ⇒
         None → Seq(
           UpdateMessageContentChanged(dialogPeer, randomId, message),
           UpdateMessageDateChanged(dialogPeer, randomId, System.currentTimeMillis())
         )
-      case None ⇒
+      case None ⇒*/
+      case _ ⇒
         val randomId = ThreadLocalRandom.current().nextLong()
         Some(randomId) → Seq(UpdateMessage(dialogPeer, adsUser.userId, System.currentTimeMillis(), randomId, message))
     }
   }
 
-  private def calculateAdsInterval(frequency: Double) = 100 - (100 * frequency).toInt
-
+  private def calculateAdsInterval(frequency: Double): Int = MaxInterval - (frequency * (MaxInterval - MinInterval)).toInt
 }

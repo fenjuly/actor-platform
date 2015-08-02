@@ -15,7 +15,7 @@ import im.actor.server.llectro.results._
 import im.actor.server.models.llectro.LlectroDevice
 import im.actor.server.persist
 
-object PeerInterceptor {
+private[llectro] object PeerInterceptor {
   private[llectro] case object Resubscribe
 
   private[llectro] def interceptorGroupId(peer: Peer): String = {
@@ -26,7 +26,7 @@ object PeerInterceptor {
   }
 }
 
-trait PeerInterceptor extends Actor with ActorLogging {
+private[interceptors] trait PeerInterceptor extends Actor with ActorLogging {
 
   protected[this] implicit val system: ActorSystem = context.system
   protected[this] implicit val ec: ExecutionContext = system.dispatcher
