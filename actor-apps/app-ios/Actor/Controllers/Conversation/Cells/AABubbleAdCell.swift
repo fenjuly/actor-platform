@@ -17,6 +17,7 @@ class AABubbleAdCell: AABubbleCell {
     var bindedHeight: CGFloat?
     var bindedFileId: Int64?
     var bindedUrl: String?
+    var bindedBannerId: Int32?
     var downloadCallback: CocoaDownloadCallback?
     
     init(frame: CGRect) {
@@ -40,6 +41,7 @@ class AABubbleAdCell: AABubbleCell {
         
         var content = BannerContent.fromJson(message.getContent() as! AMJsonContent)!
         bindedUrl = content.adUrl
+        bindedBannerId = content.bannerId
         
         if (bindedFileId != nil && content.fileId != bindedFileId) {
             MSG.unbindRawFileWithFileId(content.fileId, autoCancel: true, withCallback: downloadCallback!)
@@ -87,7 +89,13 @@ class AABubbleAdCell: AABubbleCell {
     
     func didTap() {
         if bindedUrl != nil {
-            UIApplication.sharedApplication().openURL(NSURL(string: bindedUrl!)!)
+            
+            var app = UIApplication.sharedApplication()
+            var delegate = app.delegate as! AppDelegate
+            
+            delegate.executeHidden(MSG.executeExternalCommand(APRequestNotifyBannerClick(int: jint(bindedBannerId!))), successBlock: nil, failureBlock: nil)
+            
+            app.openURL(NSURL(string: bindedUrl!)!)
         }
     }
     

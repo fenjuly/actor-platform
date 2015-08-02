@@ -10,9 +10,7 @@
 #include "im/actor/model/modules/BaseModule.h"
 
 @class AMPeer;
-@class APResponseGetAvailableInterests;
 @class ImActorModelModulesModules;
-@protocol JavaUtilList;
 
 @interface ImActorModelModulesSettings : ImActorModelModulesBaseModule
 
@@ -29,9 +27,6 @@
 - (void)changeInAppSoundEnabledWithBoolean:(jboolean)val;
 
 - (void)changeInAppVibrationEnabledWithBoolean:(jboolean)val;
-
-- (void)changeInterestEnabledWithInt:(jint)i
-                         withBoolean:(jboolean)val;
 
 - (void)changeMarkdownWithBoolean:(jboolean)val;
 
@@ -67,8 +62,6 @@
 
 - (jboolean)isInAppVibrationEnabled;
 
-- (jboolean)isInterestEnabledWithInt:(jint)i;
-
 - (jboolean)isMarkdownEnabled;
 
 - (jboolean)isNotificationsEnabled;
@@ -85,16 +78,12 @@
 
 - (jboolean)isVibrationEnabled;
 
-- (id<JavaUtilList>)loadAvailableInterests;
-
 - (void)onUpdatedSettingWithNSString:(NSString *)key
                         withNSString:(NSString *)value;
 
 - (void)resetModule;
 
 - (void)run;
-
-- (void)saveAvailableInterestsWithAPResponseGetAvailableInterests:(APResponseGetAvailableInterests *)interests;
 
 @end
 

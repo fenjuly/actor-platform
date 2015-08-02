@@ -60,6 +60,10 @@
 
 "SettingsWithdraw" = "Вывести Мои деньги";
 
+"SettingsWithdrawAlert" = "Минимальная сумма для вывода составляет $10. Ваш баланс ${money}.";
+
+"SettingsMoneyAmount" = "Сколько денег зарабатывать";
+
 /*
  * Interest
  */

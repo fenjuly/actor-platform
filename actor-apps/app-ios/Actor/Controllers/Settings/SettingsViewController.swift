@@ -153,18 +153,26 @@ class SettingsViewController: AATableViewController {
             cell.showTopSeparator()
         }
         
+        balanceSection.addCustomCell { (tableView, indexPath) -> UITableViewCell in
+            var res = SliderCell()
+            res.setTitle(localized("SettingsMoneyAmount"))
+            res.setValue(Double(MSG.getBannerFrequency()) / 100.0)
+            res.setChanged({ (value) -> () in
+                MSG.changeBannerFrequencyWithFrequency(jint(value * 100))
+            })
+            return res
+        }.setHeight(82)
+        
+        balanceSection.addActionCell("SettingsWithdraw", actionClosure: { () -> () in
+            if self.money != nil {
+                self.alertUser(localized("SettingsWithdrawAlert").replace("{money}", dest: "\(self.money!)"))
+            }
+        })
+        
         balanceSection.addNavigationCell("SettingsInterests", actionClosure: { () -> () in
             self.navigateNext(SettingsInterestsViewController(), removeCurrent: false)
         })
-        
-        balanceSection.addCustomCell { (tableView, indexPath) -> UITableViewCell in
-            var res = SliderCell()
-            return res
-        }.setHeight(66)
-        
-        balanceSection.addActionCell("SettingsWithdraw", actionClosure: { () -> () in
-            self.alertUser("Withdrawing is not implemented!")
-        })
+    
         
         // Profile
         var topSection = tableData.addSection()

@@ -5,10 +5,9 @@
 package im.actor.model.modules;
 
 import java.io.IOException;
-import java.util.List;
+import java.text.NumberFormat;
+import java.util.Locale;
 
-import im.actor.model.api.Interest;
-import im.actor.model.api.rpc.ResponseGetAvailableInterests;
 import im.actor.model.droidkit.actors.ActorCreator;
 import im.actor.model.droidkit.actors.ActorRef;
 import im.actor.model.droidkit.actors.ActorSystem;
@@ -36,8 +35,6 @@ public class Settings extends BaseModule {
     private final String KEY_NOTIFICATION_TEXT;
     private final String KEY_NOTIFICATION_CHAT_PREFIX;
     private final String KEY_MARKDOWN_ENABLED;
-    private final String KEY_AVAILABLE_INTERESTS;
-    private final String KEY_INTEREST_ENABLED;
     private final String KEY_BANNER_FREQUENCY;
 
     private final String KEY_RENAME_HINT_SHOWN;
@@ -98,10 +95,7 @@ public class Settings extends BaseModule {
         KEY_RENAME_HINT_SHOWN = "hint.contact.rename";
 
         // Llectro
-        KEY_AVAILABLE_INTERESTS = "account.interests.available_interests";
-        KEY_INTEREST_ENABLED = "account.interests.interest.";
-
-        KEY_BANNER_FREQUENCY = "account.banner_frequency";
+        KEY_BANNER_FREQUENCY = "llectro.banners.frequency";
     }
 
     public void run() {
@@ -253,50 +247,27 @@ public class Settings extends BaseModule {
         }
     }
 
-    public boolean isInterestEnabled(int i) {
-        return loadValue(KEY_INTEREST_ENABLED + i + ".enabled", false);
-    }
-
-    public void changeInterestEnabled(int i, boolean val) {
-        changeValue(KEY_INTEREST_ENABLED + i + ".enabled", val);
-    }
-
-    public void saveAvailableInterests(ResponseGetAvailableInterests interests) {
-        writeObject(interests, KEY_AVAILABLE_INTERESTS);
-        for (Interest i : interests.getRootInterests()) {
-            if (isInterestEnabled(i.getId()) != i.isSelected())
-                changeInterestEnabled(i.getId(), i.isSelected());
-        }
-    }
-
-    public List<Interest> loadAvailableInterests() {
-        List<Interest> res = null;
-        try {
-            ResponseGetAvailableInterests interests = (ResponseGetAvailableInterests) readObject(new ResponseGetAvailableInterests(), KEY_AVAILABLE_INTERESTS);
-            if (interests == null) return null;
-            res = interests.getRootInterests();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
-    }
-
     public void changeBannerFrequency(int frequency) {
         double frequencyDouble = (double) frequency / 100;
         changeValue(KEY_BANNER_FREQUENCY, frequencyDouble + "");
     }
 
     public int getBannerFrequency() {
-        int freq = 0;
-        String freqString = readValue(KEY_BANNER_FREQUENCY);
-        if (freqString != null && !freqString.isEmpty()) {
-            try {
-                freq = Math.round((int) (Double.parseDouble(freqString) * 100));
-            } catch (Exception e) {
+        double val = loadValue(KEY_BANNER_FREQUENCY, 0.5);
+        return (int) (val * 100);
+    }
 
+    private double loadValue(String key, double defaultVal) {
+        String sValue = readValue(key);
+        double value = defaultVal;
+        if (sValue != null) {
+            try {
+                value = NumberFormat.getInstance(Locale.ENGLISH).parse(sValue).doubleValue();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        return freq;
+        return value;
     }
 
     private boolean loadValue(String key, boolean defaultVal) {

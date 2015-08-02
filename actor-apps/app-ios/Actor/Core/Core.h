@@ -79,6 +79,7 @@
 #import "im/actor/model/api/rpc/RequestGetBalance.h"
 #import "im/actor/model/api/rpc/ResponseGetBalance.h"
 #import "im/actor/model/api/rpc/RequestInitLlectro.h"
+#import "im/actor/model/api/rpc/RequestNotifyBannerClick.h"
 
 // DroidKit Engine
 

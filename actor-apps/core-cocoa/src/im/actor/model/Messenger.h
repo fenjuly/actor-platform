@@ -25,7 +25,6 @@
 @class AMUserVM;
 @class AMValueModel;
 @class APRequest;
-@class APResponseGetAvailableInterests;
 @class APSexEnum;
 @class IOSIntArray;
 @class IOSLongArray;
@@ -37,7 +36,6 @@
 @protocol AMUploadFileCallback;
 @protocol AMUploadFileVMCallback;
 @protocol DKPreferencesStorage;
-@protocol JavaUtilList;
 
 @interface AMMessenger : NSObject {
  @public
@@ -78,9 +76,6 @@
 - (void)changeInAppNotificationSoundEnabledWithValue:(jboolean)val;
 
 - (void)changeInAppNotificationVibrationEnabledWithValue:(jboolean)val;
-
-- (void)changeInterestEnabledWithInterest:(jint)interest
-                                WithValue:(jboolean)val;
 
 - (void)changeMarkdownWithValue:(jboolean)val;
 
@@ -171,8 +166,6 @@
 
 - (jboolean)isInAppNotificationVibrationEnabled;
 
-- (jboolean)isInterestEnabledWithInterest:(jint)interest;
-
 - (jboolean)isLoggedIn;
 
 - (jboolean)isMarkdownEnabled;
@@ -202,8 +195,6 @@
 - (id<AMCommand>)leaveGroupCommandWithGid:(jint)gid;
 
 - (id<AMCommand>)listPublicGroups;
-
-- (id<JavaUtilList>)loadAvailableInterests;
 
 - (NSString *)loadDraftWithPeer:(AMPeer *)peer;
 
@@ -278,8 +269,6 @@
 - (id<AMCommand>)revokeIntegrationTokenCommandWithGid:(jint)gid;
 
 - (id<AMCommand>)requestRevokeLinkCommandWithGid:(jint)gid;
-
-- (void)saveAvailableInterestsWithInterests:(APResponseGetAvailableInterests *)interests;
 
 - (void)saveDraftWithPeer:(AMPeer *)peer
                 withDraft:(NSString *)draft;

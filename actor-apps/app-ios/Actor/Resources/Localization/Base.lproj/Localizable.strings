@@ -60,6 +60,10 @@
 
 "SettingsWithdraw" = "Withdraw my money";
 
+"SettingsWithdrawAlert" = "Minimal withdrawable amount is $10. Your balance is ${money}.";
+
+"SettingsMoneyAmount" = "How much money to earn";
+
 /*
  * Profile
  */

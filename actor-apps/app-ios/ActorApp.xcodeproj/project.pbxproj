@@ -2396,8 +2396,6 @@
 		0671592B1ABBC49D00D95719 /* CircullarNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircullarNode.swift; sourceTree = "<group>"; };
 		0672D2001AE64CAB0001CD32 /* LlectroTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LlectroTheme.swift; sourceTree = "<group>"; };
 		0672D2021AE676D60001CD32 /* TableViewHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewHeader.swift; sourceTree = "<group>"; };
-		06738AF11B694DD9008DE798 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = Localization/pt.lproj/Localizable.strings; sourceTree = "<group>"; };
-		06738AF21B694DD9008DE798 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		06738AF31B694F9D008DE798 /* AppText_Pt.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AppText_Pt.properties; sourceTree = "<group>"; };
 		06738AF41B694F9D008DE798 /* Months_Pt.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Months_Pt.properties; sourceTree = "<group>"; };
 		06896B0F1AFF204100BA271D /* MixpanelProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixpanelProvider.swift; sourceTree = "<group>"; };
@@ -2415,12 +2413,10 @@
 		0699D4D51ADDA0B30005AB9B /* ContactActionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactActionCell.swift; sourceTree = "<group>"; };
 		0699D4D71ADDB4C70005AB9B /* CocoaLocaleProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaLocaleProvider.swift; sourceTree = "<group>"; };
 		069B09C81B603A3E005A17C5 /* FastCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FastCache.swift; sourceTree = "<group>"; };
-		069B09CB1B633A46005A17C5 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Localization/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		069B09CC1B633BE3005A17C5 /* AppText_Cn.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AppText_Cn.properties; sourceTree = "<group>"; };
 		069B09CD1B633BE3005A17C5 /* Months_Cn.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Months_Cn.properties; sourceTree = "<group>"; };
 		069B09D31B633F29005A17C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		069B09D61B633F2B005A17C5 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		069B09D71B633F2D005A17C5 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		069FE6CB1AC017BC00C6C033 /* ContactsBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsBaseViewController.swift; sourceTree = "<group>"; };
 		069FE6CD1AC01A6300C6C033 /* ComposeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeController.swift; sourceTree = "<group>"; };
 		06A16C231ACA9F5700EA96BD /* ABActionShit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABActionShit.h; sourceTree = "<group>"; };
@@ -2593,7 +2589,7 @@
 				05E706451AD1F665009F09D8 /* SettingsViewController.swift */,
 				05E706481AD3EDE0009F09D8 /* SettingsPrivacyViewController.swift */,
 				05E7064A1AD3EDEF009F09D8 /* SettingsNotificationsViewController.swift */,
-				065808EA1B70444D00A6AA96 /* SettingsInterestsViewController.swift */,
+				06CFA97B1B691DB1007606CA /* SettingsInterestsViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -5205,9 +5201,7 @@
 			knownRegions = (
 				en,
 				Base,
-				"zh-Hans",
 				ru,
-				pt,
 			);
 			mainGroup = 2537F8241A966B9D004A02E9;
 			productRefGroup = 2537F82E1A966B9D004A02E9 /* Products */;
@@ -6164,8 +6158,6 @@
 			children = (
 				0699D4C71ADC8D820005AB9B /* ru */,
 				0699D4CA1ADC8D8C0005AB9B /* Base */,
-				069B09CB1B633A46005A17C5 /* zh-Hans */,
-				06738AF11B694DD9008DE798 /* pt */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -6175,8 +6167,6 @@
 			children = (
 				069B09D31B633F29005A17C5 /* Base */,
 				069B09D61B633F2B005A17C5 /* ru */,
-				069B09D71B633F2D005A17C5 /* zh-Hans */,
-				06738AF21B694DD9008DE798 /* pt */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

@@ -301,7 +301,7 @@ public class MyProfileFragment extends BaseFragment {
         cmd.start(new CommandCallback<ResponseGetAvailableInterests>() {
             @Override
             public void onResult(ResponseGetAvailableInterests res) {
-                messenger().saveAvailableInterests(res);
+
             }
 
             @Override

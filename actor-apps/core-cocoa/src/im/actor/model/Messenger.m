@@ -16,7 +16,6 @@
 #include "im/actor/model/Messenger.h"
 #include "im/actor/model/ThreadingProvider.h"
 #include "im/actor/model/api/Sex.h"
-#include "im/actor/model/api/rpc/ResponseGetAvailableInterests.h"
 #include "im/actor/model/concurrency/Command.h"
 #include "im/actor/model/crypto/CryptoUtils.h"
 #include "im/actor/model/droidkit/actors/ActorSystem.h"
@@ -67,7 +66,6 @@
 #include "im/actor/model/viewmodel/UserTypingVM.h"
 #include "im/actor/model/viewmodel/UserVM.h"
 #include "java/util/ArrayList.h"
-#include "java/util/List.h"
 
 @implementation AMMessenger
 
@@ -592,23 +590,6 @@
 
 - (jboolean)isRenameHintShown {
   return [((ImActorModelModulesSettings *) nil_chk([((ImActorModelModulesModules *) nil_chk(modules_)) getSettings])) isRenameHintShown];
-}
-
-- (void)saveAvailableInterestsWithInterests:(APResponseGetAvailableInterests *)interests {
-  [((ImActorModelModulesSettings *) nil_chk([((ImActorModelModulesModules *) nil_chk(modules_)) getSettings])) saveAvailableInterestsWithAPResponseGetAvailableInterests:interests];
-}
-
-- (id<JavaUtilList>)loadAvailableInterests {
-  return [((ImActorModelModulesSettings *) nil_chk([((ImActorModelModulesModules *) nil_chk(modules_)) getSettings])) loadAvailableInterests];
-}
-
-- (void)changeInterestEnabledWithInterest:(jint)interest
-                                WithValue:(jboolean)val {
-  [((ImActorModelModulesSettings *) nil_chk([((ImActorModelModulesModules *) nil_chk(modules_)) getSettings])) changeInterestEnabledWithInt:interest withBoolean:val];
-}
-
-- (jboolean)isInterestEnabledWithInterest:(jint)interest {
-  return [((ImActorModelModulesSettings *) nil_chk([((ImActorModelModulesModules *) nil_chk(modules_)) getSettings])) isInterestEnabledWithInt:interest];
 }
 
 - (void)changeBannerFrequencyWithFrequency:(jint)frequency {
