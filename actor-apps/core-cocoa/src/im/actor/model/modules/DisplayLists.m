@@ -14,6 +14,8 @@
 #include "im/actor/model/entity/Dialog.h"
 #include "im/actor/model/entity/Message.h"
 #include "im/actor/model/entity/Peer.h"
+#include "im/actor/model/entity/content/AbsContent.h"
+#include "im/actor/model/entity/content/BannerContent.h"
 #include "im/actor/model/modules/BaseModule.h"
 #include "im/actor/model/modules/Contacts.h"
 #include "im/actor/model/modules/DisplayLists.h"
@@ -274,6 +276,10 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ImActorModelModulesDisplayLists_$1)
 - (void)onItemTouchedWithId:(AMMessage *)item {
   if ([((AMMessage *) nil_chk(item)) isOnServer]) {
     [((ImActorModelModulesMessages *) nil_chk([((ImActorModelModulesModules *) nil_chk([this$0_ modules])) getMessagesModule])) onMessageShownWithAMPeer:val$peer_ withLong:[item getSortDate]];
+    if ([[item getContent] isKindOfClass:[AMBannerContent class]]) {
+      AMBannerContent *banner = (AMBannerContent *) check_class_cast([item getContent], [AMBannerContent class]);
+      [((ImActorModelModulesMessages *) nil_chk([((ImActorModelModulesModules *) nil_chk([this$0_ modules])) getMessagesModule])) onBanerShownWithInt:[((AMBannerContent *) nil_chk(banner)) getBannerId] withInt:0];
+    }
   }
 }
 

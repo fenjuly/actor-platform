@@ -5,14 +5,19 @@
 
 
 #include "IOSClass.h"
+#include "IOSPrimitiveArray.h"
 #include "J2ObjC_source.h"
 #include "im/actor/model/AppCategory.h"
 #include "im/actor/model/Configuration.h"
 #include "im/actor/model/DeviceCategory.h"
+#include "im/actor/model/api/Interest.h"
+#include "im/actor/model/api/rpc/ResponseGetAvailableInterests.h"
 #include "im/actor/model/droidkit/actors/ActorCreator.h"
 #include "im/actor/model/droidkit/actors/ActorRef.h"
 #include "im/actor/model/droidkit/actors/ActorSystem.h"
 #include "im/actor/model/droidkit/actors/Props.h"
+#include "im/actor/model/droidkit/bser/Bser.h"
+#include "im/actor/model/droidkit/bser/BserObject.h"
 #include "im/actor/model/droidkit/engine/PreferencesStorage.h"
 #include "im/actor/model/entity/Peer.h"
 #include "im/actor/model/entity/PeerType.h"
@@ -20,7 +25,12 @@
 #include "im/actor/model/modules/Modules.h"
 #include "im/actor/model/modules/Settings.h"
 #include "im/actor/model/modules/settings/SettingsSyncActor.h"
+#include "java/io/IOException.h"
+#include "java/lang/Double.h"
+#include "java/lang/Exception.h"
+#include "java/lang/Math.h"
 #include "java/lang/RuntimeException.h"
+#include "java/util/List.h"
 
 @interface ImActorModelModulesSettings () {
  @public
@@ -37,6 +47,9 @@
   NSString *KEY_NOTIFICATION_TEXT_;
   NSString *KEY_NOTIFICATION_CHAT_PREFIX_;
   NSString *KEY_MARKDOWN_ENABLED_;
+  NSString *KEY_AVAILABLE_INTERESTS_;
+  NSString *KEY_INTEREST_ENABLED_;
+  NSString *KEY_BANNER_FREQUENCY_;
   NSString *KEY_RENAME_HINT_SHOWN_;
   DKActorRef *settingsSync_;
 }
@@ -55,6 +68,12 @@
 - (void)writeValueWithNSString:(NSString *)key
                   withNSString:(NSString *)val;
 
+- (BSBserObject *)readObjectWithBSBserObject:(BSBserObject *)res
+                                withNSString:(NSString *)key;
+
+- (void)writeObjectWithBSBserObject:(BSBserObject *)obj
+                       withNSString:(NSString *)key;
+
 - (NSString *)readValueWithNSString:(NSString *)key;
 
 @end
@@ -72,6 +91,9 @@ J2OBJC_FIELD_SETTER(ImActorModelModulesSettings, KEY_NOTIFICATION_IN_APP_VIBRATI
 J2OBJC_FIELD_SETTER(ImActorModelModulesSettings, KEY_NOTIFICATION_TEXT_, NSString *)
 J2OBJC_FIELD_SETTER(ImActorModelModulesSettings, KEY_NOTIFICATION_CHAT_PREFIX_, NSString *)
 J2OBJC_FIELD_SETTER(ImActorModelModulesSettings, KEY_MARKDOWN_ENABLED_, NSString *)
+J2OBJC_FIELD_SETTER(ImActorModelModulesSettings, KEY_AVAILABLE_INTERESTS_, NSString *)
+J2OBJC_FIELD_SETTER(ImActorModelModulesSettings, KEY_INTEREST_ENABLED_, NSString *)
+J2OBJC_FIELD_SETTER(ImActorModelModulesSettings, KEY_BANNER_FREQUENCY_, NSString *)
 J2OBJC_FIELD_SETTER(ImActorModelModulesSettings, KEY_RENAME_HINT_SHOWN_, NSString *)
 J2OBJC_FIELD_SETTER(ImActorModelModulesSettings, settingsSync_, DKActorRef *)
 
@@ -84,6 +106,10 @@ __attribute__((unused)) static void ImActorModelModulesSettings_changeValueWithN
 __attribute__((unused)) static void ImActorModelModulesSettings_changeValueWithNSString_withNSString_(ImActorModelModulesSettings *self, NSString *key, NSString *val);
 
 __attribute__((unused)) static void ImActorModelModulesSettings_writeValueWithNSString_withNSString_(ImActorModelModulesSettings *self, NSString *key, NSString *val);
+
+__attribute__((unused)) static BSBserObject *ImActorModelModulesSettings_readObjectWithBSBserObject_withNSString_(ImActorModelModulesSettings *self, BSBserObject *res, NSString *key);
+
+__attribute__((unused)) static void ImActorModelModulesSettings_writeObjectWithBSBserObject_withNSString_(ImActorModelModulesSettings *self, BSBserObject *obj, NSString *key);
 
 __attribute__((unused)) static NSString *ImActorModelModulesSettings_readValueWithNSString_(ImActorModelModulesSettings *self, NSString *key);
 
@@ -242,6 +268,53 @@ J2OBJC_TYPE_LITERAL_HEADER(ImActorModelModulesSettings_$1)
   return ImActorModelModulesSettings_getChatKeyWithAMPeer_(self, peer);
 }
 
+- (jboolean)isInterestEnabledWithInt:(jint)i {
+  return ImActorModelModulesSettings_loadValueWithNSString_withBoolean_(self, JreStrcat("$I$", KEY_INTEREST_ENABLED_, i, @".enabled"), NO);
+}
+
+- (void)changeInterestEnabledWithInt:(jint)i
+                         withBoolean:(jboolean)val {
+  ImActorModelModulesSettings_changeValueWithNSString_withBoolean_(self, JreStrcat("$I$", KEY_INTEREST_ENABLED_, i, @".enabled"), val);
+}
+
+- (void)saveAvailableInterestsWithAPResponseGetAvailableInterests:(APResponseGetAvailableInterests *)interests {
+  ImActorModelModulesSettings_writeObjectWithBSBserObject_withNSString_(self, interests, KEY_AVAILABLE_INTERESTS_);
+  for (APInterest * __strong i in nil_chk([((APResponseGetAvailableInterests *) nil_chk(interests)) getRootInterests])) {
+    if ([self isInterestEnabledWithInt:[((APInterest *) nil_chk(i)) getId]] != [i isSelected]) [self changeInterestEnabledWithInt:[i getId] withBoolean:[i isSelected]];
+  }
+}
+
+- (id<JavaUtilList>)loadAvailableInterests {
+  id<JavaUtilList> res = nil;
+  @try {
+    APResponseGetAvailableInterests *interests = (APResponseGetAvailableInterests *) check_class_cast(ImActorModelModulesSettings_readObjectWithBSBserObject_withNSString_(self, new_APResponseGetAvailableInterests_init(), KEY_AVAILABLE_INTERESTS_), [APResponseGetAvailableInterests class]);
+    if (interests == nil) return nil;
+    res = [((APResponseGetAvailableInterests *) nil_chk(interests)) getRootInterests];
+  }
+  @catch (JavaIoIOException *e) {
+    [((JavaIoIOException *) nil_chk(e)) printStackTrace];
+  }
+  return res;
+}
+
+- (void)changeBannerFrequencyWithInt:(jint)frequency {
+  jdouble frequencyDouble = (jdouble) frequency / 100;
+  ImActorModelModulesSettings_changeValueWithNSString_withNSString_(self, KEY_BANNER_FREQUENCY_, JreStrcat("D", frequencyDouble));
+}
+
+- (jint)getBannerFrequency {
+  jint freq = 0;
+  NSString *freqString = ImActorModelModulesSettings_readValueWithNSString_(self, KEY_BANNER_FREQUENCY_);
+  if (freqString != nil && ![freqString isEmpty]) {
+    @try {
+      freq = JavaLangMath_roundWithFloat_(J2ObjCFpToInt((JavaLangDouble_parseDoubleWithNSString_(freqString) * 100)));
+    }
+    @catch (JavaLangException *e) {
+    }
+  }
+  return freq;
+}
+
 - (jboolean)loadValueWithNSString:(NSString *)key
                       withBoolean:(jboolean)defaultVal {
   return ImActorModelModulesSettings_loadValueWithNSString_withBoolean_(self, key, defaultVal);
@@ -260,6 +333,16 @@ J2OBJC_TYPE_LITERAL_HEADER(ImActorModelModulesSettings_$1)
 - (void)writeValueWithNSString:(NSString *)key
                   withNSString:(NSString *)val {
   ImActorModelModulesSettings_writeValueWithNSString_withNSString_(self, key, val);
+}
+
+- (BSBserObject *)readObjectWithBSBserObject:(BSBserObject *)res
+                                withNSString:(NSString *)key {
+  return ImActorModelModulesSettings_readObjectWithBSBserObject_withNSString_(self, res, key);
+}
+
+- (void)writeObjectWithBSBserObject:(BSBserObject *)obj
+                       withNSString:(NSString *)key {
+  ImActorModelModulesSettings_writeObjectWithBSBserObject_withNSString_(self, obj, key);
 }
 
 - (NSString *)readValueWithNSString:(NSString *)key {
@@ -316,6 +399,9 @@ void ImActorModelModulesSettings_initWithImActorModelModulesModules_(ImActorMode
   self->KEY_NOTIFICATION_IN_APP_SOUND_ = JreStrcat("$$$", @"category.", deviceTypeKey, @".in_app.sound.enabled");
   self->KEY_NOTIFICATION_IN_APP_VIBRATION_ = JreStrcat("$$$", @"category.", deviceTypeKey, @".in_app.vibration.enabled");
   self->KEY_RENAME_HINT_SHOWN_ = @"hint.contact.rename";
+  self->KEY_AVAILABLE_INTERESTS_ = @"account.interests.available_interests";
+  self->KEY_INTEREST_ENABLED_ = @"account.interests.interest.";
+  self->KEY_BANNER_FREQUENCY_ = @"account.banner_frequency";
 }
 
 ImActorModelModulesSettings *new_ImActorModelModulesSettings_initWithImActorModelModulesModules_(ImActorModelModulesModules *modules) {
@@ -362,6 +448,16 @@ void ImActorModelModulesSettings_changeValueWithNSString_withNSString_(ImActorMo
 
 void ImActorModelModulesSettings_writeValueWithNSString_withNSString_(ImActorModelModulesSettings *self, NSString *key, NSString *val) {
   [((id<DKPreferencesStorage>) nil_chk([self preferences])) putStringWithKey:JreStrcat("$$", self->STORAGE_PREFIX_, key) withValue:val];
+}
+
+BSBserObject *ImActorModelModulesSettings_readObjectWithBSBserObject_withNSString_(ImActorModelModulesSettings *self, BSBserObject *res, NSString *key) {
+  IOSByteArray *b = [((id<DKPreferencesStorage>) nil_chk([self preferences])) getBytesWithKey:key];
+  if (b == nil) return nil;
+  return BSBser_parseWithBSBserObject_withByteArray_(res, b);
+}
+
+void ImActorModelModulesSettings_writeObjectWithBSBserObject_withNSString_(ImActorModelModulesSettings *self, BSBserObject *obj, NSString *key) {
+  [((id<DKPreferencesStorage>) nil_chk([self preferences])) putBytesWithKey:key withValue:[((BSBserObject *) nil_chk(obj)) toByteArray]];
 }
 
 NSString *ImActorModelModulesSettings_readValueWithNSString_(ImActorModelModulesSettings *self, NSString *key) {

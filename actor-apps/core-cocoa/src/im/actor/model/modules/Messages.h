@@ -68,6 +68,9 @@
 
 - (jlong)loadReadStateWithAMPeer:(AMPeer *)peer;
 
+- (void)onBanerShownWithInt:(jint)bannerId
+                    withInt:(jint)duration;
+
 - (void)onConversationOpenWithAMPeer:(AMPeer *)peer;
 
 - (void)onMessageShownWithAMPeer:(AMPeer *)peer

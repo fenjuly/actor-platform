@@ -9,10 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,13 +23,11 @@ import im.actor.messenger.app.view.ViewHolder;
 import im.actor.model.api.Interest;
 import im.actor.model.api.rpc.RequestDisableInterests;
 import im.actor.model.api.rpc.RequestEnableInterests;
-import im.actor.model.api.rpc.RequestGetAvailableInterests;
-import im.actor.model.api.rpc.ResponseGetAvailableInterests;
 import im.actor.model.api.rpc.ResponseVoid;
 import im.actor.model.concurrency.Command;
 import im.actor.model.concurrency.CommandCallback;
 
-import static im.actor.messenger.app.Core.messenger;
+import static im.actor.messenger.app.core.Core.messenger;
 
 /**
  * Created by korka on 04.06.15.

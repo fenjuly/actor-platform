@@ -10,13 +10,17 @@
 #include "im/actor/model/modules/BaseModule.h"
 
 @class AMPeer;
+@class APResponseGetAvailableInterests;
 @class ImActorModelModulesModules;
+@protocol JavaUtilList;
 
 @interface ImActorModelModulesSettings : ImActorModelModulesBaseModule
 
 #pragma mark Public
 
 - (instancetype)initWithImActorModelModulesModules:(ImActorModelModulesModules *)modules;
+
+- (void)changeBannerFrequencyWithInt:(jint)frequency;
 
 - (void)changeConversationTonesEnabledWithBoolean:(jboolean)val;
 
@@ -25,6 +29,9 @@
 - (void)changeInAppSoundEnabledWithBoolean:(jboolean)val;
 
 - (void)changeInAppVibrationEnabledWithBoolean:(jboolean)val;
+
+- (void)changeInterestEnabledWithInt:(jint)i
+                         withBoolean:(jboolean)val;
 
 - (void)changeMarkdownWithBoolean:(jboolean)val;
 
@@ -46,6 +53,8 @@
 
 - (void)changeShowNotificationTextEnabledWithBoolean:(jboolean)val;
 
+- (jint)getBannerFrequency;
+
 - (NSString *)getNotificationSound;
 
 - (NSString *)getNotificationSoundWithAMPeer:(AMPeer *)peer;
@@ -57,6 +66,8 @@
 - (jboolean)isInAppSoundEnabled;
 
 - (jboolean)isInAppVibrationEnabled;
+
+- (jboolean)isInterestEnabledWithInt:(jint)i;
 
 - (jboolean)isMarkdownEnabled;
 
@@ -74,12 +85,16 @@
 
 - (jboolean)isVibrationEnabled;
 
+- (id<JavaUtilList>)loadAvailableInterests;
+
 - (void)onUpdatedSettingWithNSString:(NSString *)key
                         withNSString:(NSString *)value;
 
 - (void)resetModule;
 
 - (void)run;
+
+- (void)saveAvailableInterestsWithAPResponseGetAvailableInterests:(APResponseGetAvailableInterests *)interests;
 
 @end
 

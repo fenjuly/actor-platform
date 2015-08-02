@@ -16,6 +16,7 @@
 #include "im/actor/model/api/base/SeqUpdate.h"
 #include "im/actor/model/api/rpc/RequestClearChat.h"
 #include "im/actor/model/api/rpc/RequestDeleteChat.h"
+#include "im/actor/model/api/rpc/RequestNotifyBannerView.h"
 #include "im/actor/model/api/rpc/ResponseSeq.h"
 #include "im/actor/model/api/updates/UpdateChatClear.h"
 #include "im/actor/model/api/updates/UpdateChatDelete.h"
@@ -782,6 +783,11 @@ J2OBJC_TYPE_LITERAL_HEADER(ImActorModelModulesMessages_$11_$4_$2)
                         withLong:(jlong)sortDate {
   [((DKActorRef *) nil_chk(ownReadActor_)) sendWithId:new_ImActorModelModulesMessagesOwnReadActor_MessageRead_initWithAMPeer_withLong_(peer, sortDate)];
   [((DKActorRef *) nil_chk([self conversationActorWithAMPeer:peer])) sendWithId:new_ImActorModelModulesMessagesConversationActor_MessageReadByMe_initWithLong_(sortDate)];
+}
+
+- (void)onBanerShownWithInt:(jint)bannerId
+                    withInt:(jint)duration {
+  [self requestWithAPRequest:new_APRequestNotifyBannerView_initWithInt_withInt_(bannerId, duration)];
 }
 
 - (void)saveReadStateWithAMPeer:(AMPeer *)peer

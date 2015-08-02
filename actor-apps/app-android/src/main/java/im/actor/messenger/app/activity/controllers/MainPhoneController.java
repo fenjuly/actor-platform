@@ -47,10 +47,8 @@ import im.actor.messenger.app.view.HeaderViewRecyclerAdapter;
 import im.actor.messenger.app.view.OnItemClickedListener;
 import im.actor.messenger.app.view.PagerSlidingTabStrip;
 import im.actor.model.api.rpc.RequestGetAvailableInterests;
-import im.actor.model.api.rpc.RequestGetBannersFrequency;
 import im.actor.model.api.rpc.RequestInitLlectro;
 import im.actor.model.api.rpc.ResponseGetAvailableInterests;
-import im.actor.model.api.rpc.ResponseGetBannersFrequency;
 import im.actor.model.api.rpc.ResponseVoid;
 import im.actor.model.concurrency.Command;
 import im.actor.model.concurrency.CommandCallback;
@@ -600,12 +598,6 @@ public class MainPhoneController extends MainBaseController {
                     ContactsFragment res2 = new ContactsFragment();
                     res2.setHasOptionsMenu(false);
                     return res2;
-
-                case 2:
-                    JoinPublicGroupFragment res3 = new JoinPublicGroupFragment();
-                    res3.setHasOptionsMenu(false);
-                    return res3;
-
             }
         }
 
@@ -618,6 +610,11 @@ public class MainPhoneController extends MainBaseController {
                 case 1:
                     return getActivity().getString(R.string.main_bar_contacts);
             }
+        }
+
+        @Override
+        public int getPageIconResId(int position, Context context) {
+            return -1;
         }
     }
 }

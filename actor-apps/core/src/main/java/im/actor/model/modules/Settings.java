@@ -101,9 +101,6 @@ public class Settings extends BaseModule {
         KEY_AVAILABLE_INTERESTS = "account.interests.available_interests";
         KEY_INTEREST_ENABLED = "account.interests.interest.";
 
-        //llectro settings
-        KEY_AVAILABLE_INTERESTS = "account.interests.available_interests";
-        KEY_INTEREST_ENABLED = "account.interests.interest.";
         KEY_BANNER_FREQUENCY = "account.banner_frequency";
     }
 

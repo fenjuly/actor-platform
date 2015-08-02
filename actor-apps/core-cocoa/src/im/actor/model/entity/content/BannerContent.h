@@ -20,6 +20,8 @@
 
 - (NSString *)getAdUrl;
 
+- (jint)getBannerId;
+
 - (AMFileReference *)getReference;
 
 @end
