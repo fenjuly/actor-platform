@@ -32,7 +32,7 @@ extension BannerContent {
         
         if json["dataType"].string == "banner" {
             if let fileId = json["data"]["image"]["fileId"].int64,
-               let bannerId = json["data"]["bannerId"].int32
+               let bannerId = json["data"]["bannerId"].int32,
                let fileAccessHash = json["data"]["image"]["fileAccessHash"].int64,
                let fileSize = json["data"]["image"]["fileSize"].int32,
                let advertUrl = json["data"]["advertUrl"].string {
