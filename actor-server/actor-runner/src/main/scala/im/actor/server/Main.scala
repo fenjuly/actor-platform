@@ -1,5 +1,7 @@
 package im.actor.server
 
+import scala.util.{ Failure, Success }
+
 import akka.actor._
 import akka.contrib.pattern.DistributedPubSubExtension
 import akka.kernel.Bootable
@@ -41,6 +43,7 @@ import im.actor.server.social.SocialManager
 import im.actor.server.group.GroupProcessor
 import im.actor.server.user.{ UserProcessor, UserMigrator, UserViewRegion, UserProcessorRegion }
 import im.actor.server.util.{ FileStorageAdapter, S3StorageAdapter, S3StorageAdapterConfig }
+import im.actor.utils.http.DownloadManager
 
 class Main extends Bootable with DbInit with FlywayInit {
   CommonSerialization.register()
@@ -113,7 +116,6 @@ class Main extends Bootable with DbInit with FlywayInit {
 
     implicit val sessionRegion = Session.startRegionProxy()
 
-
     val llectro = new Llectro
     LlectroAdUpdater.startSingleton(llectro)
     llectro.getAndPersistInterests() onComplete {
@@ -123,7 +125,7 @@ class Main extends Bootable with DbInit with FlywayInit {
 
     val downloadManager = new DownloadManager
 
-    MessageInterceptor.startSingleton(llectro, downloadManager, mediator, llectroInterceptionConfig)
+    MessageInterceptor.startSingleton(llectro, downloadManager, mediator)
 
     RichMessageWorker.startWorker(richMessageConfig, mediator)
 
