@@ -6,11 +6,11 @@ import im.actor.server.api.rpc.service.llectro.LlectroServiceImpl
 import im.actor.server.llectro.{ Llectro, LlectroAdUpdater }
 import im.actor.server.models.llectro.{ AdClick, AdShow }
 import im.actor.server.oauth.{ GoogleProvider, OAuth2GoogleConfig }
-import im.actor.server.{ BaseAppSuite, ImplicitRegions, persist }
+import im.actor.server.{ ImplicitUserRegions, BaseAppSuite, ImplicitRegions, persist }
 
 import scala.concurrent.Future
 
-class LlectroServiceSpec extends BaseAppSuite with ImplicitRegions {
+class LlectroServiceSpec extends BaseAppSuite with ImplicitRegions with ImplicitUserRegions {
   behavior of "LlectroService"
 
   it should "write user clicks and shows to database" in s.e1
