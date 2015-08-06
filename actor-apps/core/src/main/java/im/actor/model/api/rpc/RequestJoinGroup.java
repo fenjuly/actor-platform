@@ -28,10 +28,10 @@ public class RequestJoinGroup extends Request<ResponseJoinGroup> {
         return Bser.parse(new RequestJoinGroup(), data);
     }
 
-    private String url;
+    private String token;
 
-    public RequestJoinGroup(@NotNull String url) {
-        this.url = url;
+    public RequestJoinGroup(@NotNull String token) {
+        this.token = token;
     }
 
     public RequestJoinGroup() {
@@ -39,26 +39,27 @@ public class RequestJoinGroup extends Request<ResponseJoinGroup> {
     }
 
     @NotNull
-    public String getUrl() {
-        return this.url;
+    public String getToken() {
+        return this.token;
     }
 
     @Override
     public void parse(BserValues values) throws IOException {
-        this.url = values.getString(1);
+        this.token = values.getString(1);
     }
 
     @Override
     public void serialize(BserWriter writer) throws IOException {
-        if (this.url == null) {
+        if (this.token == null) {
             throw new IOException();
         }
-        writer.writeString(1, this.url);
+        writer.writeString(1, this.token);
     }
 
     @Override
     public String toString() {
         String res = "rpc JoinGroup{";
+        res += "token=" + this.token;
         res += "}";
         return res;
     }

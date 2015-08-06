@@ -47,8 +47,7 @@ object Build extends sbt.Build {
         //PB.javaConversions in PB.protobufConfig := true,
         libraryDependencies += "com.trueaccord.scalapb" %% "scalapb-runtime" % "0.5.9" % PB.protobufConfig,
         PB.includePaths in PB.protobufConfig ++= Seq(
-          file("actor-commons-api/src/main/protobuf"),
-          file("actor-push/src/main/protobuf")
+          file("actor-commons-api/src/main/protobuf")
         )
       ) ++
       Seq(
@@ -157,6 +156,14 @@ object Build extends sbt.Build {
         )
   )
 
+  lazy val actorCQRS = Project(
+    id = "actor-cqrs",
+    base = file("actor-cqrs"),
+    settings = defaultSettings ++ Seq(
+      libraryDependencies ++= Dependencies.cqrs
+    )
+  ).dependsOn(actorCommonsApi, actorModels, actorPresences, actorSocial, actorUtils, actorUtilsCache)
+
   lazy val actorEmail = Project(
     id = "actor-email",
     base = file("actor-email"),
@@ -180,7 +187,7 @@ object Build extends sbt.Build {
     settings = defaultSettings ++ Seq(
       libraryDependencies ++= Dependencies.httpApi
     )
-  ).dependsOn(actorPeerManagers, actorPersist, actorTls)
+  ).dependsOn(actorCQRS, actorPersist, actorTls)
 
   lazy val actorLlectro = Project(
     id = "actor-llectro",
@@ -200,36 +207,19 @@ object Build extends sbt.Build {
       )
   ).dependsOn(actorPersist)
 
-  lazy val actorPeerManagers = Project(
-    id = "actor-peer-managers",
-    base = file("actor-peer-managers"),
-    settings = defaultSettings ++ Seq(
-      libraryDependencies ++= Dependencies.peerManagers
-    )
-  ).dependsOn(actorModels, actorPush % PB.protobufConfig, actorPush, actorSocial, actorUtils, actorUtilsCache)
-  .aggregate(actorPush)
-
   lazy val actorSession = Project(
     id = "actor-session",
     base = file("actor-session"),
     settings = defaultSettings ++ Seq(
       libraryDependencies ++= Dependencies.session
     )
-  ).dependsOn(actorPersist, actorCodecs, actorCommonsApi, actorRpcApi, actorPush)
+  ).dependsOn(actorPersist, actorCQRS, actorCodecs, actorCommonsApi, actorRpcApi)
 
   lazy val actorSessionMessages = Project(
     id = "actor-session-messages",
     base = file("actor-session-messages"),
     settings = defaultSettings ++ Seq(libraryDependencies ++= Dependencies.sessionMessages)
   ).dependsOn(actorCommonsBase, actorCommonsApi)
-
-  lazy val actorPush = Project(
-    id = "actor-push",
-    base = file("actor-push"),
-    settings = defaultSettings ++ Seq(
-      libraryDependencies ++= Dependencies.push
-    )
-  ).dependsOn(actorCodecs, actorCommonsApi, actorCommonsBase, actorPersist, actorPresences, actorSessionMessages, actorUtils)
 
   lazy val actorPresences = Project(
     id = "actor-presences",
@@ -247,13 +237,12 @@ object Build extends sbt.Build {
       actorActivation,
       actorCodecs,
       actorCommonsApi,
+      actorCQRS,
       actorLlectro,
       actorHttpApi, // FIXME: remove this dependency
       actorOAuth,
-      actorPeerManagers,
       actorPersist,
       actorPresences,
-      actorPush,
       actorSessionMessages,
       actorSms,
       actorSocial,
@@ -381,7 +370,6 @@ object Build extends sbt.Build {
       actorNotifications,
       actorOAuth,
       actorPersist,
-      actorPush,
       actorRpcApi,
       actorRunner,
       actorSession

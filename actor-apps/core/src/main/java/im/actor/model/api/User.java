@@ -30,8 +30,10 @@ public class User extends BserObject {
     private Avatar avatar;
     private List<ContactRecord> contactInfo;
     private Boolean isBot;
+    private String nick;
+    private String about;
 
-    public User(int id, long accessHash, @NotNull String name, @Nullable String localName, @Nullable Sex sex, @Nullable Avatar avatar, @NotNull List<ContactRecord> contactInfo, @Nullable Boolean isBot) {
+    public User(int id, long accessHash, @NotNull String name, @Nullable String localName, @Nullable Sex sex, @Nullable Avatar avatar, @NotNull List<ContactRecord> contactInfo, @Nullable Boolean isBot, @Nullable String nick, @Nullable String about) {
         this.id = id;
         this.accessHash = accessHash;
         this.name = name;
@@ -40,6 +42,8 @@ public class User extends BserObject {
         this.avatar = avatar;
         this.contactInfo = contactInfo;
         this.isBot = isBot;
+        this.nick = nick;
+        this.about = about;
     }
 
     public User() {
@@ -84,6 +88,16 @@ public class User extends BserObject {
         return this.isBot;
     }
 
+    @Nullable
+    public String getNick() {
+        return this.nick;
+    }
+
+    @Nullable
+    public String getAbout() {
+        return this.about;
+    }
+
     @Override
     public void parse(BserValues values) throws IOException {
         this.id = values.getInt(1);
@@ -101,6 +115,8 @@ public class User extends BserObject {
         }
         this.contactInfo = values.getRepeatedObj(12, _contactInfo);
         this.isBot = values.optBool(11);
+        this.nick = values.optString(13);
+        this.about = values.optString(14);
         if (values.hasRemaining()) {
             setUnmappedObjects(values.buildRemaining());
         }
@@ -127,6 +143,12 @@ public class User extends BserObject {
         if (this.isBot != null) {
             writer.writeBool(11, this.isBot);
         }
+        if (this.nick != null) {
+            writer.writeString(13, this.nick);
+        }
+        if (this.about != null) {
+            writer.writeString(14, this.about);
+        }
         if (this.getUnmappedObjects() != null) {
             SparseArray<Object> unmapped = this.getUnmappedObjects();
             for (int i = 0; i < unmapped.size(); i++) {
@@ -146,6 +168,8 @@ public class User extends BserObject {
         res += ", avatar=" + (this.avatar != null ? "set":"empty");
         res += ", contactInfo=" + this.contactInfo.size();
         res += ", isBot=" + this.isBot;
+        res += ", nick=" + this.nick;
+        res += ", about=" + this.about;
         res += "}";
         return res;
     }

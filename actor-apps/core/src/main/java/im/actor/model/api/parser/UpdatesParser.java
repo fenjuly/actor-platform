@@ -29,6 +29,8 @@ public class UpdatesParser extends BaseParser<Update> {
             case 32: return UpdateUserNameChanged.fromBytes(payload);
             case 51: return UpdateUserLocalNameChanged.fromBytes(payload);
             case 134: return UpdateUserContactsChanged.fromBytes(payload);
+            case 209: return UpdateUserNickChanged.fromBytes(payload);
+            case 210: return UpdateUserAboutChanged.fromBytes(payload);
             case 5: return UpdateContactRegistered.fromBytes(payload);
             case 40: return UpdateContactsAdded.fromBytes(payload);
             case 41: return UpdateContactsRemoved.fromBytes(payload);
@@ -48,6 +50,8 @@ public class UpdatesParser extends BaseParser<Update> {
             case 24: return UpdateGroupUserKick.fromBytes(payload);
             case 44: return UpdateGroupMembersUpdate.fromBytes(payload);
             case 38: return UpdateGroupTitleChanged.fromBytes(payload);
+            case 213: return UpdateGroupTopicChanged.fromBytes(payload);
+            case 214: return UpdateGroupAboutChanged.fromBytes(payload);
             case 39: return UpdateGroupAvatarChanged.fromBytes(payload);
             case 6: return UpdateTyping.fromBytes(payload);
             case 7: return UpdateUserOnline.fromBytes(payload);
@@ -55,6 +59,7 @@ public class UpdatesParser extends BaseParser<Update> {
             case 9: return UpdateUserLastSeen.fromBytes(payload);
             case 33: return UpdateGroupOnline.fromBytes(payload);
             case 131: return UpdateParameterChanged.fromBytes(payload);
+            case 215: return UpdateCountersChanged.fromBytes(payload);
             case 42: return UpdateConfig.fromBytes(payload);
         }
         throw new IOException();

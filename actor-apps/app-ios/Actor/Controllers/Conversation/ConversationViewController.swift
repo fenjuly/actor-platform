@@ -65,7 +65,9 @@ class ConversationViewController: ConversationBaseViewController {
         self.rightButton.setTitleColor(MainAppTheme.chat.sendEnabled, forState: UIControlState.Normal)
         self.rightButton.setTitleColor(MainAppTheme.chat.sendDisabled, forState: UIControlState.Disabled)
         
-        self.keyboardPanningEnabled = true;
+        self.keyboardPanningEnabled = true
+        
+        self.registerPrefixesForAutoCompletion(["@"])
         
         self.textView.keyboardAppearance = MainAppTheme.common.isDarkKeyboard ? UIKeyboardAppearance.Dark : UIKeyboardAppearance.Light
 
@@ -301,91 +303,6 @@ class ConversationViewController: ConversationBaseViewController {
         }
     }
     
-    override func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-//        if (touch.view == self.tableView) {
-//            return true
-//        }
-        if (touch.view is UITableViewCell) {
-            return true
-        }
-        if (touch.view.superview is UITableViewCell) {
-            return true
-        }
-//        if (touch.view.superview?.superview is UITableViewCell) {
-//            return true
-//        }
-//        if([touch.view isKindOfClass:[UITableViewCell class]]) {
-//            return NO;
-//        }
-//        // UITableViewCellContentView => UITableViewCell
-//        if([touch.view.superview isKindOfClass:[UITableViewCell class]]) {
-//            return NO;
-//        }
-//        // UITableViewCellContentView => UITableViewCellScrollView => UITableViewCell
-//        if([touch.view.superview.superview isKindOfClass:[UITableViewCell class]]) {
-//            return NO;
-//        }
-//        if (touch.view is UITableViewCellContentView && gestureRecognizer == self.singleTapGesture) {
-//            return true
-//        }
-//        if (touch.view.superview is AABubbleCell && gestureRecognizer == self.singleTapGesture) {
-//            return false
-//        }
-        return false
-    }
-    
-//    func tap(gesture: UITapGestureRecognizer) {
-//        if gesture.state == UIGestureRecognizerState.Ended {
-//            let point = gesture.locationInView(tableView)
-//            let indexPath = tableView.indexPathForRowAtPoint(point)
-//            if indexPath != nil {
-//                if let cell = tableView.cellForRowAtIndexPath(indexPath!) as? AABubbleCell {
-//                    
-//
-//                    } else if let content = item.getContent() as? AMDocumentContent {
-//                        if let documentCell = cell as? AABubbleDocumentCell {
-//                            var frame = documentCell.bubble.frame
-//                            frame = tableView.convertRect(frame, fromView: cell.bubble.superview)
-//                            if CGRectContainsPoint(frame, point) {
-//                                if let fileSource = content.getSource() as? AMFileRemoteSource {
-//                                    MSG.requestStateWithFileId(fileSource.getFileReference().getFileId(), withCallback: CocoaDownloadCallback(
-//                                    notDownloaded: { () -> () in
-//                                        MSG.startDownloadingWithReference(fileSource.getFileReference())
-//                                    }, onDownloading: { (progress) -> () in
-//                                        MSG.cancelDownloadingWithFileId(fileSource.getFileReference().getFileId())
-//                                    }, onDownloaded: { (reference) -> () in
-//                                        var controller = UIDocumentInteractionController(URL: NSURL(fileURLWithPath: CocoaFiles.pathFromDescriptor(reference))!)
-//                                        controller.delegate = self
-//                                        controller.presentPreviewAnimated(true)
-//                                    }))
-//                                } else if let fileSource = content.getSource() as? AMFileLocalSource {
-//                                    MSG.requestUploadStateWithRid(item.getRid(), withCallback: CocoaUploadCallback(
-//                                    notUploaded: { () -> () in
-//                                        MSG.resumeUploadWithRid(item.getRid())
-//                                    }, onUploading: { (progress) -> () in
-//                                        MSG.pauseUploadWithRid(item.getRid())
-//                                    }, onUploadedClosure: { () -> () in
-//                                        var controller = UIDocumentInteractionController(URL: NSURL(fileURLWithPath: CocoaFiles.pathFromDescriptor(fileSource.getFileDescriptor()))!)
-//                                        controller.delegate = self
-//                                        controller.presentPreviewAnimated(true)
-//                                    }))
-//                                }
-//                            }
-//                        }
-//                    } else if let content = item.getContent() as? AMBannerContent {
-//                        if let bannerCell = cell as? AABubbleAdCell {
-//                            var frame = bannerCell.contentView.frame
-//                            frame = tableView.convertRect(frame, fromView: cell.contentView.superview)
-//                            if CGRectContainsPoint(frame, point) {
-//                                UIApplication.sharedApplication().openURL(NSURL(string: content.getAdUrl())!)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-    
     func onAvatarTap() {
         let id = Int(peer.getPeerId())
         var controller: AAViewController
@@ -431,8 +348,8 @@ class ConversationViewController: ConversationBaseViewController {
     
     override func didPressRightButton(sender: AnyObject!) {
         MSG.trackTextSendWithPeer(peer)
-        MSG.sendMessageWithPeer(peer, withText: textView.text)
-        super.didPressRightButton(sender);
+        MSG.sendMessageWithMentionsDetect(peer, withText: textView.text)
+        super.didPressRightButton(sender)
     }
     
     override func didPressLeftButton(sender: AnyObject!) {
@@ -656,6 +573,104 @@ class ConversationViewController: ConversationBaseViewController {
         }
         layoutCache = (res.getBackgroundProcessor() as! BubbleBackgroundProcessor).layoutCache
         return res
+    }
+    
+    // Completition
+    
+    var filteredMembers = [AMUserVM]()
+    
+    override func canShowAutoCompletion() -> Bool {
+        if UInt(self.peer.getPeerType().ordinal()) == AMPeerType.GROUP.rawValue {
+            if self.foundPrefix == "@" {
+                var group = MSG.getGroups().getWithId(jlong(self.peer.getPeerId()))
+                var members = (group.getMembersModel().get() as! JavaUtilHashSet).toArray()
+            
+                var oldCount = filteredMembers.count
+                filteredMembers.removeAll(keepCapacity: true)
+                for index in 0..<members.length() {
+                    if let groupMember = members.objectAtIndex(UInt(index)) as? AMGroupMember,
+                        let user = MSG.getUserWithUid(groupMember.getUid()) {
+                            if user.getId() != MSG.myUid() {
+                                var isFiltered = false
+                                if self.foundWord != "" {
+                                    var nick = user.getNickModel().get()
+                                    if nick != nil && nick.hasPrefixInWords(self.foundWord) {
+                                        isFiltered = true
+                                    }
+                                    if !isFiltered {
+                                        isFiltered = user.getNameModel().get().hasPrefixInWords(self.foundWord)
+                                    }
+                                } else {
+                                    isFiltered = true
+                                }
+                            
+                                if isFiltered {
+                                    filteredMembers.append(user)
+                                }
+                            }
+                    }
+                }
+                
+                if oldCount == filteredMembers.count {
+                    self.autoCompletionView.reloadData()
+                }
+                
+                return filteredMembers.count > 0
+            }
+            
+            return false
+        }
+        
+        return false
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return filteredMembers.count
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var res = AutoCompleteCell(style: UITableViewCellStyle.Default, reuseIdentifier: "user_name")
+        res.bindData(filteredMembers[indexPath.row], highlightWord: foundWord)
+        return res
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var user = filteredMembers[indexPath.row]
+
+        var postfix = " "
+        if foundPrefixRange.location == 0 {
+            postfix = ": "
+        }
+        
+        if user.getNickModel().get() == nil {
+            acceptAutoCompletionWithString(user.getServerNameModel().get() + postfix, keepPrefix: false)
+        } else {
+            acceptAutoCompletionWithString(user.getNickModel().get()  + postfix)
+        }
+    }
+    
+    override func heightForAutoCompletionView() -> CGFloat {
+        var cellHeight: CGFloat = 44.0;
+        return cellHeight * CGFloat(filteredMembers.count)
+    }
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell,
+        forRowAtIndexPath indexPath: NSIndexPath)
+    {
+        // Remove separator inset
+        if cell.respondsToSelector("setSeparatorInset:") {
+            cell.separatorInset = UIEdgeInsetsZero
+        }
+        
+        // Prevent the cell from inheriting the Table View's margin settings
+        if cell.respondsToSelector("setPreservesSuperviewLayoutMargins:") {
+            cell.preservesSuperviewLayoutMargins = false
+        }
+        
+        // Explictly set your cell's layout margins
+        if cell.respondsToSelector("setLayoutMargins:") {
+            cell.layoutMargins = UIEdgeInsetsZero
+        }
     }
 }
 

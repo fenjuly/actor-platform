@@ -3,8 +3,9 @@ package im.actor.server
 import akka.actor.ActorSystem
 import akka.contrib.pattern.DistributedPubSubExtension
 import akka.stream.ActorMaterializer
-import im.actor.server.api.{ CommonSerialization, ActorSpecHelpers }
+import im.actor.server.api.CommonSerialization
 import im.actor.server.api.rpc.service.ServiceSpecHelpers
+import im.actor.server.commons.serialization.ActorSerializer
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{ Seconds, Span }
 import org.scalatest.{ FlatSpecLike, Matchers }
@@ -22,8 +23,7 @@ abstract class BaseAppSuite(_system: ActorSystem = {
   with Matchers
   with ServiceSpecMatchers
   with SqlSpecHelpers
-  with ServiceSpecHelpers
-  with ActorSpecHelpers {
+  with ServiceSpecHelpers {
 
   CommonSerialization.register()
 
@@ -38,6 +38,7 @@ abstract class BaseAppSuite(_system: ActorSystem = {
 
   override def afterAll(): Unit = {
     super.afterAll()
+    ActorSerializer.clean()
     db.close()
     ds.close()
   }

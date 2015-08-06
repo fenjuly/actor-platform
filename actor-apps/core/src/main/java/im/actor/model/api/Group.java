@@ -36,8 +36,10 @@ public class Group extends BserObject {
     private Boolean disableIntegrationView;
     private Boolean disableIntegrationsRevoke;
     private Boolean isAdmin;
+    private String theme;
+    private String about;
 
-    public Group(int id, long accessHash, @NotNull String title, @Nullable Avatar avatar, boolean isMember, int creatorUid, @NotNull List<Member> members, long createDate, @Nullable Boolean disableEdit, @Nullable Boolean disableInviteView, @Nullable Boolean disableInviteRevoke, @Nullable Boolean disableIntegrationView, @Nullable Boolean disableIntegrationsRevoke, @Nullable Boolean isAdmin) {
+    public Group(int id, long accessHash, @NotNull String title, @Nullable Avatar avatar, boolean isMember, int creatorUid, @NotNull List<Member> members, long createDate, @Nullable Boolean disableEdit, @Nullable Boolean disableInviteView, @Nullable Boolean disableInviteRevoke, @Nullable Boolean disableIntegrationView, @Nullable Boolean disableIntegrationsRevoke, @Nullable Boolean isAdmin, @Nullable String theme, @Nullable String about) {
         this.id = id;
         this.accessHash = accessHash;
         this.title = title;
@@ -52,6 +54,8 @@ public class Group extends BserObject {
         this.disableIntegrationView = disableIntegrationView;
         this.disableIntegrationsRevoke = disableIntegrationsRevoke;
         this.isAdmin = isAdmin;
+        this.theme = theme;
+        this.about = about;
     }
 
     public Group() {
@@ -123,6 +127,16 @@ public class Group extends BserObject {
         return this.isAdmin;
     }
 
+    @Nullable
+    public String getTheme() {
+        return this.theme;
+    }
+
+    @Nullable
+    public String getAbout() {
+        return this.about;
+    }
+
     @Override
     public void parse(BserValues values) throws IOException {
         this.id = values.getInt(1);
@@ -143,6 +157,8 @@ public class Group extends BserObject {
         this.disableIntegrationView = values.optBool(14);
         this.disableIntegrationsRevoke = values.optBool(15);
         this.isAdmin = values.optBool(16);
+        this.theme = values.optString(17);
+        this.about = values.optString(18);
         if (values.hasRemaining()) {
             setUnmappedObjects(values.buildRemaining());
         }
@@ -180,6 +196,12 @@ public class Group extends BserObject {
         }
         if (this.isAdmin != null) {
             writer.writeBool(16, this.isAdmin);
+        }
+        if (this.theme != null) {
+            writer.writeString(17, this.theme);
+        }
+        if (this.about != null) {
+            writer.writeString(18, this.about);
         }
         if (this.getUnmappedObjects() != null) {
             SparseArray<Object> unmapped = this.getUnmappedObjects();

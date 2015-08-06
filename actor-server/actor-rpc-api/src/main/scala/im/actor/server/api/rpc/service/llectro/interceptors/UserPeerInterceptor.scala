@@ -15,14 +15,15 @@ import slick.driver.PostgresDriver.api._
 import im.actor.api.PeersImplicits
 import im.actor.api.rpc.Update
 import im.actor.api.rpc.files.FileLocation
-import im.actor.api.rpc.messaging.{ JsonMessage, UpdateMessage, UpdateMessageContentChanged, UpdateMessageDateChanged }
+import im.actor.api.rpc.messaging.{ JsonMessage, UpdateMessage }
 import im.actor.api.rpc.peers.Peer
 import im.actor.api.rpc.peers.PeerType._
 import im.actor.server.api.rpc.service.llectro.{ LlectroAds, Message, MessageFormats }
 import im.actor.server.api.rpc.service.messaging.{ Events, MessagingService }
+import im.actor.server.db.DbExtension
 import im.actor.server.llectro.results.Banner
 import im.actor.server.{ persist, models }
-import im.actor.server.push.{ SeqUpdatesManager, SeqUpdatesManagerRegion }
+import im.actor.server.push.{ SeqUpdatesManager, SeqUpdatesExtension }
 
 object UserPeerInterceptor {
 
@@ -50,12 +51,8 @@ object UserPeerInterceptor {
     adsUser:         models.llectro.LlectroUser,
     bannerFrequency: Double,
     mediator:        ActorRef
-  )(
-    implicit
-    db:                  Database,
-    seqUpdManagerRegion: SeqUpdatesManagerRegion
   ) =
-    Props(classOf[UserPeerInterceptor], llectroAds, adsUser, bannerFrequency, mediator, db, seqUpdManagerRegion)
+    Props(classOf[UserPeerInterceptor], llectroAds, adsUser, bannerFrequency, mediator)
 }
 
 private[interceptors] final class UserPeerInterceptor(
@@ -63,16 +60,15 @@ private[interceptors] final class UserPeerInterceptor(
   adsUser:         models.llectro.LlectroUser,
   bannerFrequency: Double,
   mediator:        ActorRef
-)(
-  implicit
-  db:                  Database,
-  seqUpdManagerRegion: SeqUpdatesManagerRegion
 ) extends PeerInterceptor with PeersImplicits {
   import DistributedPubSubMediator._
 
   import PeerInterceptor._
   import MessageFormats._
   import UserPeerInterceptor._
+
+  private implicit val db: Database = DbExtension(context.system).db
+  private implicit val seqUpdExt: SeqUpdatesExtension = SeqUpdatesExtension(context.system)
 
   private[this] val initialInterval = calculateAdsInterval(bannerFrequency)
   private[this] val scheduledResubscribe = system.scheduler.schedule(Duration.Zero, 5.minutes) { self ! Resubscribe }
@@ -153,7 +149,7 @@ private[interceptors] final class UserPeerInterceptor(
           devicesBannersFiles map {
             case (device, banner, fileLocation, fileSize) ⇒
               val (randomIdOpt, updates) = getUpdates(dialogPeer, banner, device.authId, fileLocation, fileSize)
-              DBIO.sequence(updates map (SeqUpdatesManager.persistAndPushUpdate(device.authId, _, None))) map (_ ⇒ device.authId → randomIdOpt)
+              DBIO.sequence(updates map (SeqUpdatesManager.persistAndPushUpdate(device.authId, _, None, isFat = false))) map (_ ⇒ device.authId → randomIdOpt)
           }
         )
       } yield PublishedAd(ids)) andThen {

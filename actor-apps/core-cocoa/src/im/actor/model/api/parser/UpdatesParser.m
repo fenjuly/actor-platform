@@ -14,11 +14,14 @@
 #include "im/actor/model/api/updates/UpdateContactRegistered.h"
 #include "im/actor/model/api/updates/UpdateContactsAdded.h"
 #include "im/actor/model/api/updates/UpdateContactsRemoved.h"
+#include "im/actor/model/api/updates/UpdateCountersChanged.h"
+#include "im/actor/model/api/updates/UpdateGroupAboutChanged.h"
 #include "im/actor/model/api/updates/UpdateGroupAvatarChanged.h"
 #include "im/actor/model/api/updates/UpdateGroupInvite.h"
 #include "im/actor/model/api/updates/UpdateGroupMembersUpdate.h"
 #include "im/actor/model/api/updates/UpdateGroupOnline.h"
 #include "im/actor/model/api/updates/UpdateGroupTitleChanged.h"
+#include "im/actor/model/api/updates/UpdateGroupTopicChanged.h"
 #include "im/actor/model/api/updates/UpdateGroupUserInvited.h"
 #include "im/actor/model/api/updates/UpdateGroupUserKick.h"
 #include "im/actor/model/api/updates/UpdateGroupUserLeave.h"
@@ -32,11 +35,13 @@
 #include "im/actor/model/api/updates/UpdateMessageSent.h"
 #include "im/actor/model/api/updates/UpdateParameterChanged.h"
 #include "im/actor/model/api/updates/UpdateTyping.h"
+#include "im/actor/model/api/updates/UpdateUserAboutChanged.h"
 #include "im/actor/model/api/updates/UpdateUserAvatarChanged.h"
 #include "im/actor/model/api/updates/UpdateUserContactsChanged.h"
 #include "im/actor/model/api/updates/UpdateUserLastSeen.h"
 #include "im/actor/model/api/updates/UpdateUserLocalNameChanged.h"
 #include "im/actor/model/api/updates/UpdateUserNameChanged.h"
+#include "im/actor/model/api/updates/UpdateUserNickChanged.h"
 #include "im/actor/model/api/updates/UpdateUserOffline.h"
 #include "im/actor/model/api/updates/UpdateUserOnline.h"
 #include "im/actor/model/network/parser/BaseParser.h"
@@ -56,6 +61,10 @@
     return APUpdateUserLocalNameChanged_fromBytesWithByteArray_(payload);
     case 134:
     return APUpdateUserContactsChanged_fromBytesWithByteArray_(payload);
+    case 209:
+    return APUpdateUserNickChanged_fromBytesWithByteArray_(payload);
+    case 210:
+    return APUpdateUserAboutChanged_fromBytesWithByteArray_(payload);
     case 5:
     return APUpdateContactRegistered_fromBytesWithByteArray_(payload);
     case 40:
@@ -94,6 +103,10 @@
     return APUpdateGroupMembersUpdate_fromBytesWithByteArray_(payload);
     case 38:
     return APUpdateGroupTitleChanged_fromBytesWithByteArray_(payload);
+    case 213:
+    return APUpdateGroupTopicChanged_fromBytesWithByteArray_(payload);
+    case 214:
+    return APUpdateGroupAboutChanged_fromBytesWithByteArray_(payload);
     case 39:
     return APUpdateGroupAvatarChanged_fromBytesWithByteArray_(payload);
     case 6:
@@ -108,6 +121,8 @@
     return APUpdateGroupOnline_fromBytesWithByteArray_(payload);
     case 131:
     return APUpdateParameterChanged_fromBytesWithByteArray_(payload);
+    case 215:
+    return APUpdateCountersChanged_fromBytesWithByteArray_(payload);
     case 42:
     return APUpdateConfig_fromBytesWithByteArray_(payload);
   }

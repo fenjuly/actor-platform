@@ -413,7 +413,6 @@ public class Messenger {
         return modules.getGroupsModule().getAvatarVM(gid);
     }
 
-
     //////////////////////////////////////
     //         Application events
     //////////////////////////////////////
@@ -565,10 +564,10 @@ public class Messenger {
      * @param markDownText message markdown text
      * @param mentions     user's mentions
      */
-    @ObjectiveCName("sendMessageWithPeer:withText:withMarkdownText:withMentions:")
+    @ObjectiveCName("sendMessageWithPeer:withText:withMarkdownText:withMentions:autoDetect:")
     public void sendMessage(@NotNull Peer peer, @NotNull String text, @Nullable String markDownText,
-                            @Nullable ArrayList<Integer> mentions) {
-        modules.getMessagesModule().sendMessage(peer, text, markDownText, mentions);
+                            @Nullable ArrayList<Integer> mentions, boolean autoDetect) {
+        modules.getMessagesModule().sendMessage(peer, text, markDownText, mentions, autoDetect);
     }
 
     /**
@@ -580,7 +579,7 @@ public class Messenger {
      */
     @ObjectiveCName("sendMessageWithPeer:withText:withMarkdownText:")
     public void sendMessage(@NotNull Peer peer, @NotNull String text, @Nullable String markDownText) {
-        sendMessage(peer, text, markDownText, null);
+        sendMessage(peer, text, markDownText, null, false);
     }
 
     /**
@@ -592,7 +591,7 @@ public class Messenger {
      */
     @ObjectiveCName("sendMessageWithPeer:withText:withMentions:")
     public void sendMessage(@NotNull Peer peer, @NotNull String text, @Nullable ArrayList<Integer> mentions) {
-        sendMessage(peer, text, null, mentions);
+        sendMessage(peer, text, null, mentions, false);
     }
 
     /**
@@ -603,7 +602,18 @@ public class Messenger {
      */
     @ObjectiveCName("sendMessageWithPeer:withText:")
     public void sendMessage(@NotNull Peer peer, @NotNull String text) {
-        sendMessage(peer, text, null, null);
+        sendMessage(peer, text, null, null, false);
+    }
+
+    /**
+     * Send Text Message
+     *
+     * @param peer destination peer
+     * @param text message text
+     */
+    @ObjectiveCName("sendMessageWithMentionsDetect:withText:")
+    public void sendMessageWithMentionsDetect(@NotNull Peer peer, @NotNull String text) {
+        sendMessage(peer, text, null, null, true);
     }
 
     /**
@@ -739,6 +749,30 @@ public class Messenger {
     @ObjectiveCName("editMyNameCommandWithName:")
     public Command<Boolean> editMyName(final String newName) {
         return modules.getUsersModule().editMyName(newName);
+    }
+
+    /**
+     * Edit current user's nick
+     *
+     * @param newNick new user's nick
+     * @return Command for execution
+     */
+    @Nullable
+    @ObjectiveCName("editMyNickCommandWithNick:")
+    public Command<Boolean> editMyNick(final String newNick) {
+        return modules.getUsersModule().editNick(newNick);
+    }
+
+    /**
+     * Edit current user's about
+     *
+     * @param newAbout new user's about
+     * @return Command for execution
+     */
+    @Nullable
+    @ObjectiveCName("editMyAboutCommandWithNick:")
+    public Command<Boolean> editMyAbout(final String newAbout) {
+        return modules.getUsersModule().editAbout(newAbout);
     }
 
     /**

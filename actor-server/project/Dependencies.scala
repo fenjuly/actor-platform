@@ -127,11 +127,9 @@ object Dependencies {
 
   val sessionMessages = Seq(akkaActor)
 
-  val push = shared ++ Seq(akkaContrib, gcmServer, pushy)
+  val cqrs = shared ++ Seq(akkaActor, akkaContrib, gcmServer, pushy, jodaTime, postgresJdbc, slick)
 
-  val peerManagers = shared ++ Seq(akkaActor, akkaContrib, jodaTime, postgresJdbc, slick)
-
-  val persist = shared ++ Seq(apacheCommonsCodec, postgresJdbc, slick, slickJoda, slickPg, slickTestkit, flywayCore, hikariCP, jodaTime, jodaConvert)
+  val persist = shared ++ Seq(akkaActor, apacheCommonsCodec, postgresJdbc, slick, slickJoda, slickPg, slickTestkit, flywayCore, hikariCP, jodaTime, jodaConvert)
 
   val presences = shared :+ akkaContrib
 
@@ -142,7 +140,7 @@ object Dependencies {
   val tls = shared ++ Seq(akkaHttp, akkaStream)
 
   val codecs = shared ++ Seq(scalazCore, scodecBits, scodecCore)
-  
+
   val models = shared ++ Seq(eaioUuid, scodecBits, scodecCore, sprayJson, jodaTime, jodaConvert, slickPg)
 
   val frontend = shared ++ Seq(

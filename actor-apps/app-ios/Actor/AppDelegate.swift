@@ -68,6 +68,11 @@ import Foundation
             }
         })
         
+        // Bind badge counter
+        binder.bind(MSG.getAppState().getGlobalCounter(), closure: { (value: JavaLangInteger?) -> () in
+            application.applicationIconBadgeNumber = Int((value!).integerValue)
+        })
+        
         // Creating main window
         window = UIWindow(frame: UIScreen.mainScreen().bounds);
         window?.backgroundColor = UIColor.whiteColor()

@@ -10,10 +10,11 @@ import slick.driver.PostgresDriver.api._
 import im.actor.api.rpc.peers.Peer
 import im.actor.api.rpc.peers.PeerType.{ Group, Private }
 import im.actor.server.api.rpc.service.llectro.LlectroAds
+import im.actor.server.db.DbExtension
 import im.actor.server.llectro.Llectro
 import im.actor.server.persist
 import im.actor.server.push.SeqUpdatesManagerRegion
-import im.actor.server.util.FileStorageAdapter
+import im.actor.server.util.{ S3StorageExtension, FileStorageAdapter }
 import im.actor.utils.http.DownloadManager
 
 import scala.util.Try
@@ -26,8 +27,8 @@ object MessageInterceptor {
   private def props(
     llectroAds: LlectroAds,
     mediator:   ActorRef
-  )(implicit db: Database, seqUpdManagerRegion: SeqUpdatesManagerRegion): Props =
-    Props(classOf[MessageInterceptor], llectroAds, mediator, db, seqUpdManagerRegion)
+  ): Props =
+    Props(classOf[MessageInterceptor], llectroAds, mediator)
 
   val singletonName: String = "messagesInterceptor"
 
@@ -37,11 +38,10 @@ object MessageInterceptor {
     mediator:        ActorRef
   )(
     implicit
-    db:                  Database,
-    system:              ActorSystem,
-    seqUpdManagerRegion: SeqUpdatesManagerRegion,
-    fsAdapter:           FileStorageAdapter
+    system: ActorSystem
   ): ActorRef = {
+    val fsAdapter = S3StorageExtension(system).s3StorageAdapter
+
     val llectroAds = new LlectroAds(llectro, downloadManager, fsAdapter)
     system.actorOf(
       ClusterSingletonManager.props(
@@ -72,13 +72,15 @@ object MessageInterceptor {
 private[interceptors] final class MessageInterceptor(
   llectroAds: LlectroAds,
   mediator:   ActorRef
-)(implicit db: Database, seqUpdManagerRegion: SeqUpdatesManagerRegion) extends Actor with ActorLogging {
+) extends Actor with ActorLogging {
 
   import MessageInterceptor._
   import PeerInterceptor._
 
   private[this] implicit val ec: ExecutionContext = context.dispatcher
   private[this] implicit val system: ActorSystem = context.system
+
+  private[this] implicit val db: Database = DbExtension(context.system).db
 
   private[this] val scheduledFetch = context.system.scheduler.schedule(Duration.Zero, 1.minute) { reFetch(self) }
 

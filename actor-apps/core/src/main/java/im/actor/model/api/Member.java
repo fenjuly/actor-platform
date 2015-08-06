@@ -25,11 +25,13 @@ public class Member extends BserObject {
     private int uid;
     private int inviterUid;
     private long date;
+    private Boolean isAdmin;
 
-    public Member(int uid, int inviterUid, long date) {
+    public Member(int uid, int inviterUid, long date, @Nullable Boolean isAdmin) {
         this.uid = uid;
         this.inviterUid = inviterUid;
         this.date = date;
+        this.isAdmin = isAdmin;
     }
 
     public Member() {
@@ -48,11 +50,17 @@ public class Member extends BserObject {
         return this.date;
     }
 
+    @Nullable
+    public Boolean isAdmin() {
+        return this.isAdmin;
+    }
+
     @Override
     public void parse(BserValues values) throws IOException {
         this.uid = values.getInt(1);
         this.inviterUid = values.getInt(2);
         this.date = values.getLong(3);
+        this.isAdmin = values.optBool(4);
         if (values.hasRemaining()) {
             setUnmappedObjects(values.buildRemaining());
         }
@@ -63,6 +71,9 @@ public class Member extends BserObject {
         writer.writeInt(1, this.uid);
         writer.writeInt(2, this.inviterUid);
         writer.writeLong(3, this.date);
+        if (this.isAdmin != null) {
+            writer.writeBool(4, this.isAdmin);
+        }
         if (this.getUnmappedObjects() != null) {
             SparseArray<Object> unmapped = this.getUnmappedObjects();
             for (int i = 0; i < unmapped.size(); i++) {
@@ -78,6 +89,7 @@ public class Member extends BserObject {
         res += "uid=" + this.uid;
         res += ", inviterUid=" + this.inviterUid;
         res += ", date=" + this.date;
+        res += ", isAdmin=" + this.isAdmin;
         res += "}";
         return res;
     }

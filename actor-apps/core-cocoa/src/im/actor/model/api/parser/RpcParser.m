@@ -13,6 +13,7 @@
 #include "im/actor/model/api/base/WeakUpdate.h"
 #include "im/actor/model/api/parser/RpcParser.h"
 #include "im/actor/model/api/rpc/RequestAddContact.h"
+#include "im/actor/model/api/rpc/RequestCheckNickName.h"
 #include "im/actor/model/api/rpc/RequestClearChat.h"
 #include "im/actor/model/api/rpc/RequestCommitFileUpload.h"
 #include "im/actor/model/api/rpc/RequestCompleteOAuth2.h"
@@ -20,13 +21,18 @@
 #include "im/actor/model/api/rpc/RequestDeleteChat.h"
 #include "im/actor/model/api/rpc/RequestDeleteMessage.h"
 #include "im/actor/model/api/rpc/RequestDisableInterests.h"
+#include "im/actor/model/api/rpc/RequestEditAbout.h"
 #include "im/actor/model/api/rpc/RequestEditAvatar.h"
+#include "im/actor/model/api/rpc/RequestEditGroupAbout.h"
 #include "im/actor/model/api/rpc/RequestEditGroupAvatar.h"
 #include "im/actor/model/api/rpc/RequestEditGroupTitle.h"
+#include "im/actor/model/api/rpc/RequestEditGroupTopic.h"
 #include "im/actor/model/api/rpc/RequestEditName.h"
+#include "im/actor/model/api/rpc/RequestEditNickName.h"
 #include "im/actor/model/api/rpc/RequestEditParameter.h"
 #include "im/actor/model/api/rpc/RequestEditUserLocalName.h"
 #include "im/actor/model/api/rpc/RequestEnableInterests.h"
+#include "im/actor/model/api/rpc/RequestEnterGroup.h"
 #include "im/actor/model/api/rpc/RequestGetAuthSessions.h"
 #include "im/actor/model/api/rpc/RequestGetAvailableInterests.h"
 #include "im/actor/model/api/rpc/RequestGetBalance.h"
@@ -45,11 +51,11 @@
 #include "im/actor/model/api/rpc/RequestInitLlectro.h"
 #include "im/actor/model/api/rpc/RequestInviteUser.h"
 #include "im/actor/model/api/rpc/RequestJoinGroup.h"
-#include "im/actor/model/api/rpc/RequestJoinGroupDirect.h"
 #include "im/actor/model/api/rpc/RequestKickUser.h"
 #include "im/actor/model/api/rpc/RequestLeaveGroup.h"
 #include "im/actor/model/api/rpc/RequestLoadDialogs.h"
 #include "im/actor/model/api/rpc/RequestLoadHistory.h"
+#include "im/actor/model/api/rpc/RequestMakeUserAdmin.h"
 #include "im/actor/model/api/rpc/RequestMessageRead.h"
 #include "im/actor/model/api/rpc/RequestMessageReceived.h"
 #include "im/actor/model/api/rpc/RequestNotifyBannerClick.h"
@@ -82,10 +88,12 @@
 #include "im/actor/model/api/rpc/RequestUnregisterPush.h"
 #include "im/actor/model/api/rpc/RequestValidateCode.h"
 #include "im/actor/model/api/rpc/ResponseAuth.h"
+#include "im/actor/model/api/rpc/ResponseBool.h"
 #include "im/actor/model/api/rpc/ResponseCommitFileUpload.h"
 #include "im/actor/model/api/rpc/ResponseCreateGroup.h"
 #include "im/actor/model/api/rpc/ResponseEditAvatar.h"
 #include "im/actor/model/api/rpc/ResponseEditGroupAvatar.h"
+#include "im/actor/model/api/rpc/ResponseEnterGroup.h"
 #include "im/actor/model/api/rpc/ResponseGetAuthSessions.h"
 #include "im/actor/model/api/rpc/ResponseGetAvailableInterests.h"
 #include "im/actor/model/api/rpc/ResponseGetBalance.h"
@@ -101,9 +109,9 @@
 #include "im/actor/model/api/rpc/ResponseIntegrationToken.h"
 #include "im/actor/model/api/rpc/ResponseInviteUrl.h"
 #include "im/actor/model/api/rpc/ResponseJoinGroup.h"
-#include "im/actor/model/api/rpc/ResponseJoinGroupDirect.h"
 #include "im/actor/model/api/rpc/ResponseLoadDialogs.h"
 #include "im/actor/model/api/rpc/ResponseLoadHistory.h"
+#include "im/actor/model/api/rpc/ResponseMakeUserAdmin.h"
 #include "im/actor/model/api/rpc/ResponseSearchContacts.h"
 #include "im/actor/model/api/rpc/ResponseSendAuthCodeObsolete.h"
 #include "im/actor/model/api/rpc/ResponseSeq.h"
@@ -152,6 +160,12 @@
     return APRequestEditUserLocalName_fromBytesWithByteArray_(payload);
     case 53:
     return APRequestEditName_fromBytesWithByteArray_(payload);
+    case 205:
+    return APRequestEditNickName_fromBytesWithByteArray_(payload);
+    case 206:
+    return APRequestCheckNickName_fromBytesWithByteArray_(payload);
+    case 212:
+    return APRequestEditAbout_fromBytesWithByteArray_(payload);
     case 31:
     return APRequestEditAvatar_fromBytesWithByteArray_(payload);
     case 91:
@@ -184,6 +198,8 @@
     return APRequestLoadDialogs_fromBytesWithByteArray_(payload);
     case 65:
     return APRequestCreateGroup_fromBytesWithByteArray_(payload);
+    case 199:
+    return APRequestEnterGroup_fromBytesWithByteArray_(payload);
     case 85:
     return APRequestEditGroupTitle_fromBytesWithByteArray_(payload);
     case 86:
@@ -196,14 +212,18 @@
     return APRequestLeaveGroup_fromBytesWithByteArray_(payload);
     case 71:
     return APRequestKickUser_fromBytesWithByteArray_(payload);
+    case 211:
+    return APRequestEditGroupTopic_fromBytesWithByteArray_(payload);
+    case 213:
+    return APRequestEditGroupAbout_fromBytesWithByteArray_(payload);
+    case 214:
+    return APRequestMakeUserAdmin_fromBytesWithByteArray_(payload);
     case 177:
     return APRequestGetGroupInviteUrl_fromBytesWithByteArray_(payload);
     case 179:
     return APRequestRevokeInviteUrl_fromBytesWithByteArray_(payload);
     case 180:
     return APRequestJoinGroup_fromBytesWithByteArray_(payload);
-    case 199:
-    return APRequestJoinGroupDirect_fromBytesWithByteArray_(payload);
     case 201:
     return APRequestGetPublicGroups_fromBytesWithByteArray_(payload);
     case 182:
@@ -284,14 +304,16 @@
     return APResponseLoadDialogs_fromBytesWithByteArray_(payload);
     case 66:
     return APResponseCreateGroup_fromBytesWithByteArray_(payload);
+    case 200:
+    return APResponseEnterGroup_fromBytesWithByteArray_(payload);
     case 115:
     return APResponseEditGroupAvatar_fromBytesWithByteArray_(payload);
+    case 215:
+    return APResponseMakeUserAdmin_fromBytesWithByteArray_(payload);
     case 178:
     return APResponseInviteUrl_fromBytesWithByteArray_(payload);
     case 181:
     return APResponseJoinGroup_fromBytesWithByteArray_(payload);
-    case 200:
-    return APResponseJoinGroupDirect_fromBytesWithByteArray_(payload);
     case 202:
     return APResponseGetPublicGroups_fromBytesWithByteArray_(payload);
     case 183:
@@ -318,6 +340,8 @@
     return APResponseSeq_fromBytesWithByteArray_(payload);
     case 102:
     return APResponseSeqDate_fromBytesWithByteArray_(payload);
+    case 209:
+    return APResponseBool_fromBytesWithByteArray_(payload);
     case 13:
     return ImActorModelApiBaseSeqUpdate_fromBytesWithByteArray_(payload);
     case 73:

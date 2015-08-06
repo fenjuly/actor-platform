@@ -17,6 +17,7 @@ import im.actor.model.api.updates.UpdateChatDelete;
 import im.actor.model.api.updates.UpdateContactRegistered;
 import im.actor.model.api.updates.UpdateContactsAdded;
 import im.actor.model.api.updates.UpdateContactsRemoved;
+import im.actor.model.api.updates.UpdateCountersChanged;
 import im.actor.model.api.updates.UpdateGroupAvatarChanged;
 import im.actor.model.api.updates.UpdateGroupInvite;
 import im.actor.model.api.updates.UpdateGroupMembersUpdate;
@@ -27,7 +28,6 @@ import im.actor.model.api.updates.UpdateGroupUserKick;
 import im.actor.model.api.updates.UpdateGroupUserLeave;
 import im.actor.model.api.updates.UpdateMessage;
 import im.actor.model.api.updates.UpdateMessageContentChanged;
-import im.actor.model.api.updates.UpdateMessageDateChanged;
 import im.actor.model.api.updates.UpdateMessageDelete;
 import im.actor.model.api.updates.UpdateMessageRead;
 import im.actor.model.api.updates.UpdateMessageReadByMe;
@@ -35,10 +35,12 @@ import im.actor.model.api.updates.UpdateMessageReceived;
 import im.actor.model.api.updates.UpdateMessageSent;
 import im.actor.model.api.updates.UpdateParameterChanged;
 import im.actor.model.api.updates.UpdateTyping;
+import im.actor.model.api.updates.UpdateUserAboutChanged;
 import im.actor.model.api.updates.UpdateUserAvatarChanged;
 import im.actor.model.api.updates.UpdateUserLastSeen;
 import im.actor.model.api.updates.UpdateUserLocalNameChanged;
 import im.actor.model.api.updates.UpdateUserNameChanged;
+import im.actor.model.api.updates.UpdateUserNickChanged;
 import im.actor.model.api.updates.UpdateUserOffline;
 import im.actor.model.api.updates.UpdateUserOnline;
 import im.actor.model.modules.BaseModule;
@@ -169,6 +171,12 @@ public class UpdateProcessor extends BaseModule {
         } else if (update instanceof UpdateUserLocalNameChanged) {
             UpdateUserLocalNameChanged localNameChanged = (UpdateUserLocalNameChanged) update;
             usersProcessor.onUserLocalNameChanged(localNameChanged.getUid(), localNameChanged.getLocalName());
+        } else if (update instanceof UpdateUserNickChanged) {
+            UpdateUserNickChanged nickChanged = (UpdateUserNickChanged) update;
+            usersProcessor.onUserNickChanged(nickChanged.getUid(), nickChanged.getNickname());
+        } else if (update instanceof UpdateUserAboutChanged) {
+            UpdateUserAboutChanged userAboutChanged = (UpdateUserAboutChanged) update;
+            usersProcessor.onUserAboutChanged(userAboutChanged.getUid(), userAboutChanged.getAbout());
         } else if (update instanceof UpdateUserAvatarChanged) {
             UpdateUserAvatarChanged avatarChanged = (UpdateUserAvatarChanged) update;
             usersProcessor.onUserAvatarChanged(avatarChanged.getUid(), avatarChanged.getAvatar());
@@ -192,9 +200,6 @@ public class UpdateProcessor extends BaseModule {
         } else if (update instanceof UpdateMessageSent) {
             UpdateMessageSent messageSent = (UpdateMessageSent) update;
             messagesProcessor.onMessageSent(messageSent.getPeer(), messageSent.getRid(), messageSent.getDate());
-        } else if (update instanceof UpdateMessageDateChanged) {
-            UpdateMessageDateChanged dateChanged = (UpdateMessageDateChanged) update;
-            messagesProcessor.onMessageDateChanged(dateChanged.getPeer(), dateChanged.getRid(), dateChanged.getDate());
         } else if (update instanceof UpdateMessageContentChanged) {
             UpdateMessageContentChanged contentChanged = (UpdateMessageContentChanged) update;
             messagesProcessor.onMessageContentChanged(contentChanged.getPeer(),
@@ -260,6 +265,8 @@ public class UpdateProcessor extends BaseModule {
             settingsProcessor.onSettingsChanged(
                     ((UpdateParameterChanged) update).getKey(),
                     ((UpdateParameterChanged) update).getValue());
+        } else if (update instanceof UpdateCountersChanged) {
+            messagesProcessor.onCountersChanged(((UpdateCountersChanged) update).getCounters());
         }
     }
 

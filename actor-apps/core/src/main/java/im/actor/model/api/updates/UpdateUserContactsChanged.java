@@ -68,7 +68,8 @@ public class UpdateUserContactsChanged extends Update {
     @Override
     public String toString() {
         String res = "update UserContactsChanged{";
-        res += "contactRecords=" + this.contactRecords.size();
+        res += "uid=" + this.uid;
+        res += ", contactRecords=" + this.contactRecords.size();
         res += "}";
         return res;
     }

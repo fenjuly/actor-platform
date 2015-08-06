@@ -12,6 +12,7 @@ class SettingsViewController: AATableViewController {
     
     private let UserInfoCellIdentifier = "UserInfoCellIdentifier"
     private let TitledCellIdentifier = "TitledCellIdentifier"
+    private let TextCellIdentifier = "TextCellIdentifier"
     
     private var tableData: UATableData!
     
@@ -20,8 +21,6 @@ class SettingsViewController: AATableViewController {
     private var binder = Binder()
     
     private var phones: JavaUtilArrayList?
-    
-    private var money: String?
     
     // MARK: -
     // MARK: Constructors
@@ -62,32 +61,89 @@ class SettingsViewController: AATableViewController {
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         tableView.backgroundColor = MainAppTheme.list.backyardColor
         tableView.clipsToBounds = false
-        // tableView.tableFooterView = UIView()
+        tableView.tableFooterView = UIView()
         
         tableData = UATableData(tableView: tableView)
         tableData.registerClass(UserPhotoCell.self, forCellReuseIdentifier: UserInfoCellIdentifier)
         tableData.registerClass(TitledCell.self, forCellReuseIdentifier: TitledCellIdentifier)
+        tableData.registerClass(TextCell.self, forCellReuseIdentifier: TextCellIdentifier)
         tableData.tableScrollClosure = { (tableView: UITableView) -> () in
             self.applyScrollUi(tableView)
         }
         
         // Avatar
-        tableData.addSection().addCustomCell { (tableView, indexPath) -> UITableViewCell in
+        
+        var profileInfoSection = tableData.addSection(autoSeparator: true)
+            .setFooterHeight(15)
+        
+        profileInfoSection.addCustomCell { (tableView, indexPath) -> UITableViewCell in
             var cell: UserPhotoCell = tableView.dequeueReusableCellWithIdentifier(self.UserInfoCellIdentifier, forIndexPath: indexPath) as! UserPhotoCell
             cell.contentView.superview?.clipsToBounds = false
             if self.user != nil {
                 cell.setUsername(self.user!.getNameModel().get())
             }
-            cell.setLeftInset(15.0)
-            
             self.applyScrollUi(tableView, cell: cell)
             
             return cell
-        }.setHeight(Double(avatarHeight))
+        }.setHeight(avatarHeight)
+        
+        // Nick
+        profileInfoSection
+            .addCustomCell { (tableView, indexPath) -> UITableViewCell in
+                var cell: TitledCell = tableView.dequeueReusableCellWithIdentifier(self.TitledCellIdentifier, forIndexPath: indexPath) as! TitledCell
+                
+                cell.enableNavigationIcon()
+                
+                if let nick = self.user!.getNickModel().get() {
+                    cell.setTitle(localized("ProfileUsername"), content: "@\(nick)")
+                    cell.setAction(false)
+                } else {
+                    cell.setTitle(localized("ProfileUsername"), content: localized("SettingsUsernameNotSet"))
+                    cell.setAction(true)
+                }
+                
+                return cell
+                
+            }
+            .setHeight(55)
+            .setAction { () -> () in
+                self.textInputAlert("SettingsUsernameTitle", content: self.user!.getNickModel().get(), action: "AlertSave", tapYes: { (nval) -> () in
+                    var nNick: String? = nval.trim()
+                    if nNick?.size() == 0 {
+                        nNick = nil
+                    }
+                    self.execute(MSG.editMyNickCommandWithNick(nNick))
+                })
+        }
+        
+        var about = self.user!.getAboutModel().get()
+        if about == nil {
+            about = localized("SettingsAboutNotSet")
+        }
+        var aboutCell = profileInfoSection
+            .addTextCell(localized("ProfileAbout"), text: about)
+            .setEnableNavigation(true)
+        if self.user!.getAboutModel().get() == nil {
+            aboutCell.setIsAction(true)
+        }
+        aboutCell.setAction { () -> () in
+            var text = self.user!.getAboutModel().get()
+            if text == nil {
+                text = ""
+            }
+            var controller = EditTextController(title: localized("SettingsChangeAboutTitle"), actionTitle: localized("NavigationSave"), content: text, completition: { (newText) -> () in
+                var updatedText: String? = newText.trim()
+                if updatedText?.size() == 0 {
+                    updatedText = nil
+                }
+                self.execute(MSG.editMyAboutCommandWithNick(updatedText))
+            })
+            var navigation = AANavigationController(rootViewController: controller)
+            self.presentViewController(navigation, animated: true, completion: nil)
+        }
         
         // Phones
-        tableData.addSection()
-            .setFooterHeight(15)
+        profileInfoSection
             .addCustomCells(55, countClosure: { () -> Int in
             if (self.phones != nil) {
                 return Int(self.phones!.size())
@@ -95,23 +151,9 @@ class SettingsViewController: AATableViewController {
             return 0
             }) { (tableView, index, indexPath) -> UITableViewCell in
                 var cell: TitledCell = tableView.dequeueReusableCellWithIdentifier(self.TitledCellIdentifier, forIndexPath: indexPath) as! TitledCell
-                
-                cell.setLeftInset(15.0)
-                
                 if let phone = self.phones!.getWithInt(jint(index)) as? AMUserPhone {
                     cell.setTitle(phone.getTitle(), content: "+\(phone.getPhone())")
                 }
-                
-                cell.hideTopSeparator()
-                cell.showBottomSeparator()
-                
-                var phonesCount = Int(self.phones!.size());
-                if index == phonesCount - 1 {
-                    cell.setBottomSeparatorLeftInset(0.0)
-                } else {
-                    cell.setBottomSeparatorLeftInset(15.0)
-                }
-                
                 return cell
             }.setAction { (index) -> () in
                 var phoneNumber = (self.phones?.getWithInt(jint(index)).getPhone())!
@@ -136,46 +178,9 @@ class SettingsViewController: AATableViewController {
                 }
             }
         
-        // Balance
-        var balanceSection = tableData.addSection()
-            .setHeaderHeight(15)
-            .setFooterHeight(15)
-        
-        balanceSection.addCommonCell { (cell) -> () in
-            var template = NSLocalizedString("SettingsBalance", comment: "title")
-            if self.money != nil {
-                cell.setContent(template.replace("{money}", dest: "\(self.money!)"))
-            } else {
-                cell.setContent(template.replace("{money}", dest: "..."))
-            }
-            cell.style = .Normal
-            cell.showBottomSeparator()
-            cell.showTopSeparator()
-        }
-        
-        balanceSection.addCustomCell { (tableView, indexPath) -> UITableViewCell in
-            var res = SliderCell()
-            res.setTitle(localized("SettingsMoneyAmount"))
-            res.setValue(Double(MSG.getBannerFrequency()) / 100.0)
-            res.setChanged({ (value) -> () in
-                MSG.changeBannerFrequencyWithFrequency(jint(value * 100))
-            })
-            return res
-        }.setHeight(82)
-        
-        balanceSection.addActionCell("SettingsWithdraw", actionClosure: { () -> () in
-            if self.money != nil {
-                self.alertUser(localized("SettingsWithdrawAlert").replace("{money}", dest: "\(self.money!)"))
-            }
-        })
-        
-        balanceSection.addNavigationCell("SettingsInterests", actionClosure: { () -> () in
-            self.navigateNext(SettingsInterestsViewController(), removeCurrent: false)
-        })
-    
         
         // Profile
-        var topSection = tableData.addSection()
+        var topSection = tableData.addSection(autoSeparator: true)
         topSection.setHeaderHeight(15)
         topSection.setFooterHeight(15)
         
@@ -204,7 +209,7 @@ class SettingsViewController: AATableViewController {
                         })
                     }
             })
-        }).hideTopSeparator().hideBottomSeparator()
+        })
         
         // Profile: Set Name
         topSection.addActionCell("SettingsChangeName", actionClosure: { () -> () in
@@ -230,25 +235,25 @@ class SettingsViewController: AATableViewController {
             }
             
             alertView.show()
-        }).showTopSeparator(15)
+        })
 
         // Settings
-        var actionsSection = tableData.addSection()
+        var actionsSection = tableData.addSection(autoSeparator: true)
             .setHeaderHeight(15)
             .setFooterHeight(15)
         
         // Settings: Notifications
         actionsSection.addNavigationCell("SettingsNotifications", actionClosure: { () -> () in
             self.navigateNext(SettingsNotificationsViewController(), removeCurrent: false)
-        }).showBottomSeparator(15)
+        })
         
         // Settings: Privacy
         actionsSection.addNavigationCell("SettingsSecurity", actionClosure: { () -> () in
             self.navigateNext(SettingsPrivacyViewController(), removeCurrent: false)
-        }).hideTopSeparator()
+        })
         
         // Support
-        var supportSection = tableData.addSection()
+        var supportSection = tableData.addSection(autoSeparator: true)
             .setHeaderHeight(15)
             .setFooterHeight(15)
         
@@ -267,19 +272,18 @@ class SettingsViewController: AATableViewController {
             }, failureBlock: { (val) -> Void in
                 // TODO: Implement
             })
-        }).showBottomSeparator(15)
+        })
         
         // Support: Ask Question
         supportSection.addNavigationCell("SettingsAbout", actionClosure: { () -> () in
             UIApplication.sharedApplication().openURL(NSURL(string: "https://actor.im")!)
-        }).showBottomSeparator(15).hideTopSeparator()
+        })
         
         // Support: App version
         var version = NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"] as! String
         supportSection.addCommonCell()
             .setContent(NSLocalizedString("SettingsVersion", comment: "Version").stringByReplacingOccurrencesOfString("{version}", withString: version, options: NSStringCompareOptions.allZeros, range: nil))
             .setStyle(.Hint)
-            .hideTopSeparator()
         
         // Bind
         
@@ -293,6 +297,22 @@ class SettingsViewController: AATableViewController {
             if let cell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as? UserPhotoCell {
                 cell.setUsername(value!)
             }
+        })
+        
+        binder.bind(user!.getAboutModel(), closure: { (value: String?) -> () in
+            var about = self.user!.getAboutModel().get()
+            if about == nil {
+                about = localized("SettingsAboutNotSet")
+                aboutCell.setIsAction(true)
+            } else {
+                aboutCell.setIsAction(false)
+            }
+            aboutCell.setContent(localized("ProfileAbout"), text: about)
+            self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 2, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Automatic)
+        })
+        
+        binder.bind(user!.getNickModel(), closure: { (value: String?) -> () in
+            self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Automatic)
         })
         
         binder.bind(MSG.getOwnAvatarVM().getUploadState(), valueModel2: user!.getAvatarModel()) { (upload: AMAvatarUploadState?, avatar:  AMAvatar?) -> () in
@@ -333,18 +353,6 @@ class SettingsViewController: AATableViewController {
         navigationController?.navigationBar.shadowImage = UIImage()
 
         applyScrollUi(tableView)
-        
-        self.executeHidden(MSG.executeExternalCommand(APRequestGetBalance()), successBlock: { (val) -> Void in
-            let res = val as! APResponseGetBalance
-            self.money = res.getBalance()
-            
-            if let cell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 2)) as? CommonCell {
-                var template = NSLocalizedString("SettingsBalance", comment: "title")
-                cell.setContent(template.replace("{money}", dest: "\(self.money!)"))
-            }
-        }) { (val) -> Void in
-            // Just ignore
-        }
     }
     
     override func viewWillDisappear(animated: Bool) {
