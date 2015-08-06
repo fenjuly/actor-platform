@@ -188,29 +188,33 @@ private[user] trait UserCommandHandlers {
     }
   }
 
-  protected def messageReceived(user: User, receiverAuthIdId: Long, peerUserId: Int, date: Long): Unit =
-    if (!this.lastReceiveDate.exists(_ >= date) && (this.lastMessageDate.isEmpty || this.lastMessageDate.exists(_ >= date))) {
+  protected def messageReceived(user: User, receiverAuthIdId: Long, peerUserId: Int, date: Long): Unit = {
+    val receiveFuture = if (!this.lastReceiveDate.exists(_ >= date) && (this.lastMessageDate.isEmpty || this.lastMessageDate.exists(_ >= date))) {
       this.lastReceiveDate = Some(date)
       val now = System.currentTimeMillis
       val update = UpdateMessageReceived(Peer(PeerType.Private, user.id), date, now)
-      val receiveFuture: Future[MessageReceivedAck] = for {
+      for {
         _ ← UserOffice.broadcastUserUpdate(peerUserId, update, None, isFat = false)
         _ ← db.run(markMessagesReceived(models.Peer.privat(user.id), models.Peer.privat(peerUserId), new DateTime(date)))
       } yield MessageReceivedAck()
-      val replyTo = sender()
-      receiveFuture pipeTo replyTo onFailure {
-        case e ⇒
-          replyTo ! Status.Failure(ReceiveFailed)
-          log.error(e, "Failed to mark messages received")
-      }
+    } else {
+      Future.successful(MessageReceivedAck())
     }
+
+    val replyTo = sender()
+    receiveFuture pipeTo replyTo onFailure {
+      case e ⇒
+        replyTo ! Status.Failure(ReceiveFailed)
+        log.error(e, "Failed to mark messages received")
+    }
+  }
 
   protected def messageRead(user: User, readerAuthId: Long, peerUserId: Int, date: Long): Unit = {
     val readFuture = if (!this.lastReadDate.exists(_ >= date) && (this.lastMessageDate.isEmpty || this.lastMessageDate.exists(_ >= date))) {
       this.lastReadDate = Some(date)
       val now = System.currentTimeMillis
       val update = UpdateMessageRead(Peer(PeerType.Private, user.id), date, now)
-      val readerUpdate = UpdateMessageReadByMe(Peer(PeerType.Private, peerUserId), now)
+      val readerUpdate = UpdateMessageReadByMe(Peer(PeerType.Private, peerUserId), date)
       for {
         _ ← UserOffice.broadcastUserUpdate(peerUserId, update, None, isFat = false)
         _ ← db.run(markMessagesRead(models.Peer.privat(user.id), models.Peer.privat(peerUserId), new DateTime(date)))
