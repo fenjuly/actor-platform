@@ -168,7 +168,7 @@ private final class SeqUpdatesManagerActor(
           log.warning("Deleting google push creds")
           googleCredsOpt = None
           db.run(deletePushCredentials(authId))
-        case None ⇒
+        case _ ⇒
         // ignoring, already deleted
       }
     case ReceiveTimeout ⇒
