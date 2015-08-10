@@ -43,7 +43,7 @@ import im.actor.server.social.SocialExtension
 import im.actor.server.user._
 import im.actor.utils.http.DownloadManager
 
-class Main extends Bootable with FlywayInit {
+class Main extends Bootable {
   CommonSerialization.register()
   UserProcessor.register()
   GroupProcessor.register()
@@ -69,8 +69,7 @@ class Main extends Bootable with FlywayInit {
   implicit val db = DbExtension(system).db
 
   def startup() = {
-    val flyway = initFlyway(DbExtension(system).ds.ds)
-    flyway.migrate()
+    DbExtension(system).migrate()
 
     UserMigrator.migrateAll()
     GroupMigrator.migrateAll()
