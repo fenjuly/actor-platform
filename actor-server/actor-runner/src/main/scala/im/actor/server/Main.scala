@@ -37,7 +37,7 @@ import im.actor.server.llectro.{ LlectroAdUpdater, Llectro }
 import im.actor.server.oauth.{ GoogleProvider, OAuth2GoogleConfig }
 import im.actor.server.presences.{ GroupPresenceManager, PresenceManager }
 import im.actor.server.push._
-import im.actor.server.session.{ Session, SessionConfig }
+import im.actor.server.session.{ SessionMessage, Session, SessionConfig }
 import im.actor.server.sms.TelesignSmsEngine
 import im.actor.server.social.SocialExtension
 import im.actor.server.user._
@@ -71,6 +71,7 @@ class Main extends Bootable {
   def startup() = {
     DbExtension(system).migrate()
 
+    SessionMessage.register()
     UserMigrator.migrateAll()
     GroupMigrator.migrateAll()
 
